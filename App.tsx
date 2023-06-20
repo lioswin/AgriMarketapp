@@ -6,6 +6,9 @@ import {
 import Splash from './Screens/auth/splash';
 import SignupScreen from './Screens/auth/SignupScreen';
 import LoginScreen from './Screens/auth/LoginScreen';
+import HomeScreen from './Screens/user/HomeScreen';
+import OrderList from './components/OrderList/OrderList';
+import MyOrderScreen from './Screens/user/MyOrderScreen';
 
 function App(): JSX.Element {
  
@@ -16,7 +19,10 @@ function App(): JSX.Element {
   //  </View>
   // <Splash navigation={undefined}/>
   // <SignupScreen navigation={undefined}/>
-  <LoginScreen navigation={undefined}/>
+  // <LoginScreen navigation={undefined}/>
+  // <HomeScreen navigation={undefined} route={undefined}/>
+//  <OrderList item={undefined} onPress={undefined}/>
+<MyOrderScreen navigation={undefined} route={undefined}/>
   );
 }
 
