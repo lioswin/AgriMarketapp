@@ -9,6 +9,7 @@ import LoginScreen from './Screens/auth/LoginScreen';
 import HomeScreen from './Screens/user/HomeScreen';
 import OrderList from './components/OrderList/OrderList';
 import MyOrderScreen from './Screens/user/MyOrderScreen';
+import MyOrderDetailScreen from './Screens/user/MyOrderDetailScreen';
 
 function App(): JSX.Element {
  
@@ -22,7 +23,8 @@ function App(): JSX.Element {
   // <LoginScreen navigation={undefined}/>
   // <HomeScreen navigation={undefined} route={undefined}/>
 //  <OrderList item={undefined} onPress={undefined}/>
-<MyOrderScreen navigation={undefined} route={undefined}/>
+// <MyOrderScreen navigation={undefined} route={undefined}/> 
+<MyOrderDetailScreen navigation={undefined} route={undefined}/>
   );
 }
 

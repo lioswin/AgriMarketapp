@@ -15,7 +15,7 @@ import BasicProductList from "../../components/BasicProductList/BasicProductList
 import StepIndicator from "react-native-step-indicator";
 
 const MyOrderDetailScreen = ({ navigation, route }) => {
-  const { orderDetail } = route.params;
+  // const { orderDetail } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
@@ -79,35 +79,35 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
   };
 
   // set total cost, order detail, order status on initial render
-  useEffect(() => {
-    setError("");
-    setAlertType("error");
-    if (orderDetail?.status == "delivered") {
-      setStatusDisable(true);
-    } else {
-      setStatusDisable(false);
-    }
-    setValue(orderDetail?.status);
-    setAddress(
-      orderDetail?.country +
-        ", " +
-        orderDetail?.city +
-        ", " +
-        orderDetail?.shippingAddress
-    );
-    setTotalCost(
-      orderDetail?.items.reduce((accumulator, object) => {
-        return (accumulator + object.price) * object.quantity;
-      }, 0)
-    );
-    if (orderDetail?.status === "pending") {
-      setTrackingState(1);
-    } else if (orderDetail?.status === "shipped") {
-      setTrackingState(2);
-    } else {
-      setTrackingState(3);
-    }
-  }, []);
+  // useEffect(() => {
+  //   setError("");
+  //   setAlertType("error");
+  //   if (orderDetail?.status == "delivered") {
+  //     setStatusDisable(true);
+  //   } else {
+  //     setStatusDisable(false);
+  //   }
+  //   setValue(orderDetail?.status);
+  //   setAddress(
+  //     orderDetail?.country +
+  //       ", " +
+  //       orderDetail?.city +
+  //       ", " +
+  //       orderDetail?.shippingAddress
+  //   );
+  //   setTotalCost(
+  //     orderDetail?.items.reduce((accumulator, object) => {
+  //       return (accumulator + object.price) * object.quantity;
+  //     }, 0)
+  //   );
+  //   if (orderDetail?.status === "pending") {
+  //     setTrackingState(1);
+  //   } else if (orderDetail?.status === "shipped") {
+  //     setTrackingState(2);
+  //   } else {
+  //     setTrackingState(3);
+  //   }
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -120,7 +120,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="arrow-left"
             size={30}
             color={colors.muted}
           />
@@ -161,16 +161,19 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
             Ordered on 7/4/2022
             {/* {dateFormat(orderDetail?.updatedAt)} */}
           </Text>
-          {orderDetail?.shippedOn && (
+          {/* {orderDetail?.shippedOn && ( */}
             <Text style={styles.secondarytextSm}>
-              Shipped on {orderDetail?.shippedOn}
+              Shipped on 2/4/2022
+              {/* {orderDetail?.shippedOn} */}
             </Text>
-          )}
-          {orderDetail?.deliveredOn && (
+          {/* // )} */}
+
+          {/* {orderDetail?.deliveredOn && ( */}
             <Text style={styles.secondarytextSm}>
-              Delivered on {orderDetail?.deliveredOn}
+              Delivered on 2/4/20223
+              {/* {orderDetail?.deliveredOn} */}
             </Text>
-          )}
+          {/* )} */}
           <View style={{ marginTop: 15, width: "100%" }}>
             <StepIndicator
               customStyles={customStyles}
@@ -189,18 +192,21 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
         <View style={styles.orderItemsContainer}>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>Package</Text>
-            <Text>{value}</Text>
+            <Text>4322
+              {/* {value} */}
+              </Text>
           </View>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>
-              Order on : {orderDetail?.updatedAt}
+              Order on : 65656
+              {/* {orderDetail?.updatedAt} */}
             </Text>
           </View>
           <ScrollView
             style={styles.orderSummaryContainer}
             nestedScrollEnabled={true}
           >
-            {orderDetail?.items.map((product, index) => (
+            {/* {orderDetail?.items.map((product, index) => (
               <View key={index}>
                 <BasicProductList
                   title={product?.productId?.title}
@@ -208,11 +214,18 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
                   quantity={product?.quantity}
                 />
               </View>
-            ))}
+            ))} */}
+             <View key={1}>
+                <BasicProductList
+                  title={'dsfsfs'}
+                  price={'2323232'}
+                  quantity={'2323'}
+                />
+              </View>
           </ScrollView>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>Total</Text>
-            <Text>{totalCost}$</Text>
+            <Text>$576767</Text>
           </View>
         </View>
         <View style={styles.emptyView}></View>
