@@ -16,30 +16,31 @@ import CustomButton from "../../components/CustomButton";
 // import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import productImage from "../../assets/logo/logo_white2.png";
 
 const ProductDetailScreen = ({ navigation, route }) => {
-  const { product } = route.params;
-  const cartproduct = useSelector((state) => state.product);
-  const dispatch = useDispatch();
+  // const { product } = route.params;
+  // const cartproduct = useSelector((state) => state.product);
+  // const dispatch = useDispatch();
 
-  const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
+  // const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
   //method to add item to cart(redux)
-  const handleAddToCat = (item) => {
-    addCartItem(item);
-  };
+  // const handleAddToCat = (item) => {
+  //   addCartItem(item);
+  // };
 
   //remove the authUser from async storage and navigate to login
-  const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
-    navigation.replace("login");
-  };
+  // const logout = async () => {
+  //   await AsyncStorage.removeItem("authUser");
+  //   navigation.replace("login");
+  // };
 
   const [onWishlist, setOnWishlist] = useState(false);
-  const [avaiableQuantity, setAvaiableQuantity] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [productImage, SetProductImage] = useState(" ");
-  const [wishlistItems, setWishlistItems] = useState([]);
+  // const [avaiableQuantity, setAvaiableQuantity] = useState(0);
+  // const [quantity, setQuantity] = useState(0);
+  // const [productImage, SetProductImage] = useState(" ");
+  // const [wishlistItems, setWishlistItems] = useState([]);
   const [error, setError] = useState("");
   const [isDisable, setIsDisbale] = useState(true);
   const [alertType, setAlertType] = useState("error");
@@ -188,7 +189,8 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   //render whenever the value of wishlistItems change
   // useEffect(() => {}, [wishlistItems]);
-
+  const cartproduct =[2,4,5];
+  const avaiableQuantity =[3,4];
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -199,7 +201,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="arrow-left-circle"
             size={30}
             color={colors.muted}
           />
@@ -222,13 +224,13 @@ const ProductDetailScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.productImageContainer}>
-          <Image source={{ uri: productImage }} style={styles.productImage} />
+          <Image source={ productImage } style={styles.productImage} />
         </View>
         <CustomAlert message={error} type={alertType} />
         <View style={styles.productInfoContainer}>
           <View style={styles.productInfoTopContainer}>
             <View style={styles.productNameContaier}>
-              <Text style={styles.productNameText}>{product?.title}</Text>
+              <Text style={styles.productNameText}>fghjkl;l</Text>
             </View>
             <View style={styles.infoButtonContainer}>
               <View style={styles.wishlistButtonContainer}>
@@ -251,12 +253,12 @@ const ProductDetailScreen = ({ navigation, route }) => {
               </View>
               <View style={styles.productPriceContainer}>
                 <Text style={styles.secondaryTextSm}>Price:</Text>
-                <Text style={styles.primaryTextSm}>{product?.price}$</Text>
+                <Text style={styles.primaryTextSm}>1000$</Text>
               </View>
             </View>
             <View style={styles.productDescriptionContainer}>
               <Text style={styles.secondaryTextSm}>Description:</Text>
-              <Text>{product?.description}</Text>
+              <Text>sdjhcbsdbckjsdbcsdkdnd</Text>
             </View>
           </View>
           <View style={styles.productInfoBottomContainer}>
@@ -270,7 +272,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 >
                   <Text style={styles.counterButtonText}>-</Text>
                 </TouchableOpacity>
-                <Text style={styles.counterCountText}>{quantity}</Text>
+                <Text style={styles.counterCountText}>2323</Text>
                 <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
@@ -290,7 +292,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
                   }}
                 />
               ) : (
-                <CustomButton text={"Out of Stock"} disabled={true} />
+                <CustomButton text={"Out of Stock"} disabled={false} />
               )}
             </View>
           </View>

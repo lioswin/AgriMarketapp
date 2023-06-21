@@ -12,6 +12,9 @@ import MyOrderScreen from './Screens/user/MyOrderScreen';
 import MyOrderDetailScreen from './Screens/user/MyOrderDetailScreen';
 import CheckoutScreen from './Screens/user/CheckoutScreen';
 import MyWishlistScreen from './Screens/profile/MyWishlistScreen';
+import ProductDetailScreen from './Screens/user/ProductDetailScreen';
+import UserProfileScreen from './Screens/profile/UserProfileScreen';
+import AddCategoryScreen from './Screens/admin/AddCategoryScreen';
 
 function App(): JSX.Element {
  
@@ -28,7 +31,10 @@ function App(): JSX.Element {
 // <MyOrderScreen navigation={undefined} route={undefined}/> 
 //<MyOrderDetailScreen navigation={undefined} route={undefined}/> 
 //<CheckoutScreen navigation={undefined} route={undefined}/>
-<MyWishlistScreen navigation={undefined} route={undefined}/>
+// <MyWishlistScreen navigation={undefined} route={undefined}/> 
+//<ProductDetailScreen navigation={undefined} route={undefined}/>
+//<UserProfileScreen navigation={undefined} route={undefined}/>
+<AddCategoryScreen navigation={undefined} route={undefined}/>
 
   );
 }

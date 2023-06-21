@@ -46,7 +46,7 @@ const OptionList = ({
           </View>
           <View>
             <MaterialIcons
-              name="arrow-forward-ios"
+              name="arrow-right"
               size={24}
               color={colors.primary}
             />
