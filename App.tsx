@@ -10,6 +10,8 @@ import HomeScreen from './Screens/user/HomeScreen';
 import OrderList from './components/OrderList/OrderList';
 import MyOrderScreen from './Screens/user/MyOrderScreen';
 import MyOrderDetailScreen from './Screens/user/MyOrderDetailScreen';
+import CheckoutScreen from './Screens/user/CheckoutScreen';
+import MyWishlistScreen from './Screens/profile/MyWishlistScreen';
 
 function App(): JSX.Element {
  
@@ -24,7 +26,10 @@ function App(): JSX.Element {
   // <HomeScreen navigation={undefined} route={undefined}/>
 //  <OrderList item={undefined} onPress={undefined}/>
 // <MyOrderScreen navigation={undefined} route={undefined}/> 
-<MyOrderDetailScreen navigation={undefined} route={undefined}/>
+//<MyOrderDetailScreen navigation={undefined} route={undefined}/> 
+//<CheckoutScreen navigation={undefined} route={undefined}/>
+<MyWishlistScreen navigation={undefined} route={undefined}/>
+
   );
 }
 
