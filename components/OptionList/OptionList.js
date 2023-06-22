@@ -4,7 +4,7 @@ import React from "react";
 // import { MaterialIcons } from "@expo/vector-icons";
 import MaterialIcons from 'react-native-vector-icons/Feather';
 import { colors } from "../../constants";
-import Ionicons from 'react-native-vector-icons/Feather';
+// import Ionicons from 'react-native-vector-icons/Feather';
 
 const OptionList = ({
   Icon,
@@ -28,7 +28,7 @@ const OptionList = ({
                 style={styles.actionButton}
                 onPress={onPressSecondary}
               >
-                <Icon name={"add"} size={15} color={colors.white} />
+                <Icon name={"plus"} size={15} color={colors.white} />
               </TouchableOpacity>
             )}
             {onPress && (

@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import Ionicons from 'react-native-vector-icons/Feather';
+import  AntDesign from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
@@ -21,7 +21,7 @@ import { useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const AddProductScreen = ({ navigation, route }) => {
-  const { authUser } = route.params;
+  // const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -92,49 +92,49 @@ const AddProductScreen = ({ navigation, route }) => {
       });
   };
 
-  var myHeaders = new Headers();
-  myHeaders.append("x-auth-token", authUser.token);
-  myHeaders.append("Content-Type", "application/json");
+  // var myHeaders = new Headers();
+  // myHeaders.append("x-auth-token", authUser.token);
+  // myHeaders.append("Content-Type", "application/json");
 
-  const upload = async () => {
-    console.log("upload-F:", image);
+  // const upload = async () => {
+  //   console.log("upload-F:", image);
 
-    var formdata = new FormData();
-    formdata.append("photos", image, "product.png");
+  //   var formdata = new FormData();
+  //   formdata.append("photos", image, "product.png");
 
-    var ImageRequestOptions = {
-      method: "POST",
-      body: formdata,
-      redirect: "follow",
-    };
+  //   var ImageRequestOptions = {
+  //     method: "POST",
+  //     body: formdata,
+  //     redirect: "follow",
+  //   };
 
-    fetch(
-      "https://api-easybuy.herokuapp.com/photos/upload",
-      ImageRequestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => console.log("error", error));
-  };
+  //   fetch(
+  //     "https://api-easybuy.herokuapp.com/photos/upload",
+  //     ImageRequestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       console.log(result);
+  //     })
+  //     .catch((error) => console.log("error", error));
+  // };
 
-  var raw = JSON.stringify({
-    title: title,
-    sku: sku,
-    price: price,
-    image: image,
-    description: description,
-    category: category,
-    quantity: quantity,
-  });
+  // var raw = JSON.stringify({
+  //   title: title,
+  //   sku: sku,
+  //   price: price,
+  //   image: image,
+  //   description: description,
+  //   category: category,
+  //   quantity: quantity,
+  // });
 
-  var requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
+  // var requestOptions = {
+  //   method: "POST",
+  //   headers: myHeaders,
+  //   body: raw,
+  //   redirect: "follow",
+  // };
 
   //Method for selecting the image from device gallery
   const pickImage = async () => {
@@ -192,10 +192,10 @@ const AddProductScreen = ({ navigation, route }) => {
   };
 
   //call the fetch functions initial render
-  useEffect(() => {
-    fetchCategories();
-    console.log(categories);
-  }, []);
+  // useEffect(() => {
+  //   fetchCategories();
+  //   console.log(categories);
+  // }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -209,7 +209,7 @@ const AddProductScreen = ({ navigation, route }) => {
           }}
         >
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="arrow-left-circle"
             size={30}
             color={colors.muted}
           />
@@ -239,7 +239,7 @@ const AddProductScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
-                <AntDesign name="pluscircle" size={50} color={colors.muted} />
+                <AntDesign name="plus-circle" size={50} color={colors.muted} />
               </TouchableOpacity>
             )}
           </View>
