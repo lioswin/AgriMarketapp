@@ -11,19 +11,19 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from 'react-native-vector-icons/Feather';
 import cartIcon from "../../assets/icons/cart_beg.png";
 import emptyBox from "../../assets/image/emptybox.png";
 import { colors, network } from "../../constants";
-import { useSelector, useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+// import { useSelector, useDispatch } from "react-redux";
+// import { bindActionCreators } from "redux";
+// import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import CustomInput from "../../components/CustomInput";
 
 const CategoriesScreen = ({ navigation, route }) => {
-  const { categoryID } = route.params;
+  // const { categoryID } = route.params;
 
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -40,10 +40,10 @@ const CategoriesScreen = ({ navigation, route }) => {
   const windowHeight = Dimensions.get("window").height;
 
   //initialize the cartproduct with redux data
-  const cartproduct = useSelector((state) => state.product);
-  const dispatch = useDispatch();
+  // const cartproduct = useSelector((state) => state.product);
+  // const dispatch = useDispatch();
 
-  const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
+  // const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
   //method to navigate to product detail screen of specific product
   const handleProductPress = (product) => {
@@ -62,88 +62,89 @@ const CategoriesScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  var headerOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
+  // var headerOptions = {
+  //   method: "GET",
+  //   redirect: "follow",
+  // };
   const category = [
     {
       _id: "62fe244f58f7aa8230817f89",
-      title: "Garments",
+      title: "Grains",
       image: require("../../assets/icons/garments.png"),
     },
     {
       _id: "62fe243858f7aa8230817f86",
-      title: "Electornics",
+      title: "Fruits",
       image: require("../../assets/icons/electronics.png"),
     },
     {
       _id: "62fe241958f7aa8230817f83",
-      title: "Cosmentics",
+      title: "roots",
       image: require("../../assets/icons/cosmetics.png"),
     },
     {
       _id: "62fe246858f7aa8230817f8c",
-      title: "Groceries",
+      title: "Vegetables",
       image: require("../../assets/icons/grocery.png"),
     },
   ];
   const [selectedTab, setSelectedTab] = useState(category[0]);
 
   //method to fetch the product from server using API call
-  const fetchProduct = () => {
-    var headerOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-    fetch(`${network.serverip}/products`, headerOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          setProducts(result.data);
-          setFoundItems(result.data);
-          setError("");
-        } else {
-          setError(result.message);
-        }
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log("error", error);
-      });
-  };
+  // const fetchProduct = () => {
+  //   var headerOptions = {
+  //     method: "GET",
+  //     redirect: "follow",
+  //   };
+  //   fetch(`${network.serverip}/products`, headerOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       if (result.success) {
+  //         setProducts(result.data);
+  //         setFoundItems(result.data);
+  //         setError("");
+  //       } else {
+  //         setError(result.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message);
+  //       console.log("error", error);
+  //     });
+  // };
 
   //listener call on tab focus and initlize categoryID
-  navigation.addListener("focus", () => {
-    if (categoryID) {
-      setSelectedTab(categoryID);
-    }
-  });
+  // navigation.addListener("focus", () => {
+  //   if (categoryID) {
+  //     setSelectedTab(categoryID);
+  //   }
+  // });
 
   //method to filter the product according to user search in selected category
-  const filter = () => {
-    const keyword = filterItem;
-    if (keyword !== "") {
-      const results = products.filter((product) => {
-        return product?.title.toLowerCase().includes(keyword.toLowerCase());
-      });
+  // const filter = () => {
+  //   const keyword = filterItem;
+  //   if (keyword !== "") {
+  //     const results = products.filter((product) => {
+  //       return product?.title.toLowerCase().includes(keyword.toLowerCase());
+  //     });
 
-      setFoundItems(results);
-    } else {
-      setFoundItems(products);
-    }
-  };
+  //     setFoundItems(results);
+  //   } else {
+  //     setFoundItems(products);
+  //   }
+  // };
 
   //render whenever the value of filterItem change
-  useEffect(() => {
-    filter();
-  }, [filterItem]);
+  // useEffect(() => {
+  //   filter();
+  // }, [filterItem]);
 
   //fetch the product on initial render
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-
+  // useEffect(() => {
+  //   fetchProduct();
+  // }, []);
+const cartproduct =[3,4,5]
+console.log(cartproduct);
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -154,7 +155,7 @@ const CategoriesScreen = ({ navigation, route }) => {
           }}
         >
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="arrow-left-circle"
             size={30}
             color={colors.muted}
           />

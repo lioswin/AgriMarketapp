@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState , useEffect} from "react";
 import {
     StyleSheet,
     StatusBar,
@@ -19,7 +19,7 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import { SliderBox } from "react-native-image-slider-box";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
-
+import pb from "../../constants/Network";
 
 const category = [
     {
@@ -54,26 +54,26 @@ const HomeScreen = ({ navigation, route }) => {
 
     // const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
-    // const { user } = route.params;
-    // const [products, setProducts] = useState([]);
-    // const [refeshing, setRefreshing] = useState(false);
-    // const [error, setError] = useState("");
-    // const [userInfo, setUserInfo] = useState({});
-    // const [searchItems, setSearchItems] = useState([]);
+    const { user } = route.params;
+    const [products, setProducts] = useState([]);
+    const [refeshing, setRefreshing] = useState(false);
+    const [error, setError] = useState("");
+    const [userInfo, setUserInfo] = useState({});
+    const [searchItems, setSearchItems] = useState([]);
 
     //method to convert the authUser to json object
-    // const convertToJSON = (obj) => {
-    //     try {
-    //         setUserInfo(JSON.parse(obj));
-    //     } catch (e) {
-    //         setUserInfo(obj);
-    //     }
-    // };
+    const convertToJSON = (obj) => {
+        try {
+            setUserInfo(JSON.parse(obj));
+        } catch (e) {
+            setUserInfo(obj);
+        }
+    };
 
     //method to navigate to product detail screen of a specific product
-    // const handleProductPress = (product) => {
-    //     navigation.navigate("productdetail", { product: product });
-    // };
+    const handleProductPress = (product) => {
+        navigation.navigate("productdetail", { product: product });
+    };
 
     //method to add to cart (redux)
     // const handleAddToCat = (product) => {
@@ -108,19 +108,33 @@ const HomeScreen = ({ navigation, route }) => {
     //         });
     // };
 
+    const fetchProduct = async ()=>{
+        const products = await pb.collection('products').getFullList({
+            sort: '-created',
+        });
+         console.log(products)
+        setProducts(products);
+        setError("");
+        let payload = [];
+        products.forEach((cat,index)=>{
+            let searchableItem = { ...cat, id: ++index, name: cat.title };
+            payload.push(searchableItem);
+            setSearchItems(payload)
+          })
+          console.log(searchItems);
+    }
     //method call on pull refresh
-    // const handleOnRefresh = () => {
-    //     setRefreshing(true);
-    //     fetchProduct();
-    //     setRefreshing(false);
-    // };
+    const handleOnRefresh = () => {
+        setRefreshing(true);
+        fetchProduct();
+        setRefreshing(false);
+    };
 
     //convert user to json and fetch products in initial render
-    // useEffect(() => {
-    //     convertToJSON(user);
-    //     fetchProduct();
-    // }, []);
-    const products = ["gar", "gar",];
+    useEffect(() => {
+        convertToJSON(user);
+        fetchProduct();
+    }, []);
     return (
         <View style={styles.container}>
             <StatusBar></StatusBar>
@@ -248,25 +262,25 @@ const HomeScreen = ({ navigation, route }) => {
                     ) : (
                         <View style={styles.productCardContainer}>
                             <FlatList
-                                // refreshControl={
-                                //     <RefreshControl
-                                //         refreshing={refeshing}
-                                //         onRefresh={handleOnRefresh}
-                                //     />
-                                // }
-                                showsHorizontalScrollIndicator={false}
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={refeshing}
+                                        onRefresh={handleOnRefresh}
+                                    />
+                                }
+                                showsHorizontalScrollIndicator={true}
                                 initialNumToRender={5}
                                 horizontal={true}
                                 data={products.slice(0, 4)}
-                                keyExtractor={(item) => item._id}
+                                keyExtractor={(item) => item.id}
                                 renderItem={({ item, index }) => (
                                     <View
-                                        key={item._id}
+                                        key={item.id}
                                         style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
                                     >
                                         <ProductCard
-                                            name={item.title}
-                                            image={`${network.serverip}/uploads/${item.image}`}
+                                            name={item.name}
+                                            image={`${pb.baseUrl}/api/files/products/${item.id}/${item.image}`}
                                             price={item.price}
                                             quantity={item.quantity}
                                             onPress={() => handleProductPress(item)}

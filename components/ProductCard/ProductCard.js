@@ -22,8 +22,8 @@ const ProductCard = ({
       </View>
       <View style={styles.infoContainer}>
         <View>
-          <Text style={styles.secondaryTextSm}>dummy data</Text>
-          <Text style={styles.primaryTextSm}>{price}$</Text>
+          <Text style={styles.secondaryTextSm}>{`${name.substring(0,10)}..`}</Text>
+          <Text style={styles.primaryTextSm}>{price}Tsh</Text>
         </View>
         <View>
           {quantity > 0 ? (
@@ -31,11 +31,11 @@ const ProductCard = ({
               style={styles.iconContainer}
               onPress={onPressSecondary}
             >
-              <Ionicons name="cart" size={20} color="white" />
+              <Ionicons name="shopping-cart" size={20} color="white" />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.iconContainerDisable} disabled>
-              <Ionicons name="cart" size={20} color="white" />
+              <Ionicons name="shopping-cart" size={20} color="white" />
             </TouchableOpacity>
           )}
         </View>

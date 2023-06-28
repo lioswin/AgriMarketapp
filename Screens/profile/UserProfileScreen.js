@@ -10,24 +10,25 @@ import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 import Ionicons from 'react-native-vector-icons/Feather';
 import OptionList from "../../components/OptionList/OptionList";
 import { colors } from "../../constants";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserProfileScreen = ({ navigation, route }) => {
-  // const [userInfo, setUserInfo] = useState({});
-  // const { user } = route.params;
+  const [userInfo, setUserInfo] = useState({});
+  const { user } = route.params;
 
-  // const convertToJSON = (obj) => {
-  //   try {
-  //     setUserInfo(JSON.parse(obj));
-  //   } catch (e) {
-  //     setUserInfo(obj);
-  //   }
-  // };
+  const convertToJSON = (obj) => {
+    try {
+      setUserInfo(JSON.parse(obj));
+    } catch (e) {
+      setUserInfo(obj);
+    }
+  };
 
   // covert  the user to Json object on initial render
-  // useEffect(() => {
-  //   convertToJSON(user);
-  // }, []);
+  useEffect(() => {
+    convertToJSON(user);
+  }, []);
+  
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
@@ -78,6 +79,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           Icon={Ionicons}
           iconName={"log-out"}
           onPress={async () => {
+            console.log()
             await AsyncStorage.removeItem("authUser");
             navigation.replace("login");
           }}

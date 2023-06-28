@@ -15,12 +15,12 @@ import { colors } from "../../constants";
 import CustomCard from "../../components/CustomCard/CustomCard";
 import OptionList from "../../components/OptionList/OptionList";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProgressDialog from "react-native-progress-dialog";
 
 const DashboardScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params;
-  // const [user, setUser] = useState(authUser);
+  const { authUser } = route.params;
+  const [user, setUser] = useState(authUser);
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
@@ -28,10 +28,10 @@ const DashboardScreen = ({ navigation, route }) => {
   const [refeshing, setRefreshing] = useState(false);
 
   //method to remove the auth user from async storage and navigate the login if token expires
-  // const logout = async () => {
-  //   await AsyncStorage.removeItem("authUser");
-  //   navigation.replace("login");
-  // };
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
 
   // var myHeaders = new Headers();
   // myHeaders.append("x-auth-token", authUser.token);

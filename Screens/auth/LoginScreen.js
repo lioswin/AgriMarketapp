@@ -6,51 +6,40 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   ScrollView,
+  TextInput,
 } from "react-native";
 
 import React, { useState } from "react";
-import { colors, network } from "../../constants";
+import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo_white2.png";
 import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import pb from "../../constants/Network";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
 
   //method to store the authUser to aync storage
-  // _storeData = async (user) => {
-  //   try {
-  //     AsyncStorage.setItem("authUser", JSON.stringify(user));
-  //   } catch (error) {
-  //     console.log(error);
-  //     setError(error);
-  //   }
-  // };
-
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  var raw = JSON.stringify({
-    email: email,
-    password: password,
-  });
-
-  var requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
+  _storeData = async (user) => {
+    try {
+      AsyncStorage.setItem("authUser", JSON.stringify(user));
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    }
   };
 
+  console.log(pb.baseUrl);
+ 
   //method to validate the user credentials and navigate to Home Screen / Dashboard
-  const loginHandle = () => {
+  const loginHandle = async () => {
     setIsloading(true);
     //[check validation] -- Start
     // if email does not contain @ sign
@@ -77,33 +66,45 @@ const LoginScreen = ({ navigation }) => {
       return setError("Password must be 6 characters long");
     }
     //[check validation] -- End
-
-    fetch(network.serverip + "/login", requestOptions) // API call
-      .then((response) => response.json())
-      .then((result) => {
-        if (
-          result.status == 200 ||
-          (result.status == 1 && result.success != false)
-        ) {
-          if (result?.data?.userType == "ADMIN") {
-            //check the user type if the type is ADMIN then navigate to Dashboard else navigate to User Home
-            _storeData(result.data);
-            setIsloading(false);
-            navigation.replace("dashboard", { authUser: result.data }); // naviagte to Admin Dashboard
-          } else {
-            _storeData(result.data);
-            setIsloading(false);
-            navigation.replace("tab", { user: result.data }); // naviagte to User Dashboard
-          }
-        } else {
+    // compare details from db
+      try {
+        const authData = await pb.collection('users').authWithPassword(email, password);
+        console.log(authData.record);
+        if(authData.record.role=='farmer')
+        {
+          _storeData(authData.record);
           setIsloading(false);
-          return setError(result.message);
+          navigation.replace("dashboard", { authUser: authData.record });
+        }else
+        {
+          _storeData(authData.record);
+          setIsloading(false);
+          navigation.replace("tab", { authUser: authData.record });
         }
-      })
-      .catch((error) => {
         setIsloading(false);
-        console.log("error", setError(error.message));
-      });
+        return setError("")
+        // Continue with successful authentication logic
+      } catch (error) {
+        // Handle the error appropriately (e.g., show an error message to the user)
+        setIsloading(false);
+        console.error('Authentication error:', error);
+        // return setError("Authentication error ,try again");
+       
+      }
+  
+  };
+
+  //method to login user
+  const Login = async () => {
+    try {
+      const authData = await pb.collection('users').authWithPassword(email, password);
+      console.log(authData);
+      // Continue with successful authentication logic
+    } catch (error) {
+      // Handle the error appropriately (e.g., show an error message to the user)
+      setIsloading(false);
+      return setError("Authentication error ,try again");
+    }
   };
 
   return (
@@ -119,7 +120,7 @@ const LoginScreen = ({ navigation }) => {
             <View>
               <Text style={styles.welcomeText}>Welcome to AgriMarket</Text>
               <Text style={styles.welcomeParagraph}>
-                make your ecommerce easy
+                make your agricommerce easy
               </Text>
             </View>
             <View>
@@ -134,7 +135,7 @@ const LoginScreen = ({ navigation }) => {
             <CustomInput
               value={email}
               setValue={setEmail}
-              placeholder={"Username"}
+              placeholder={"email"}
               placeholderTextColor={colors.muted}
               radius={5}
             />
@@ -153,7 +154,7 @@ const LoginScreen = ({ navigation }) => {
               >
                 Forget Password?
               </Text>
-            </View>
+            </View>   
           </View>
         </ScrollView>
         <View style={styles.buttomContainer}>
