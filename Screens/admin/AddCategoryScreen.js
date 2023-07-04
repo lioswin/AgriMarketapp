@@ -124,6 +124,20 @@ const AddCategoryScreen = ({ navigation, route }) => {
         style={{ flex: 1, width: "100%" }}
       >
         <View style={styles.formContainer}>
+        <View style={styles.imageContainer}>
+            {image ? (
+              <TouchableOpacity style={styles.imageHolder} onPress={()=>{null}}>
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: 200, height: 200 }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.imageHolder} onPress={()=>{null}}>
+                <AntDesign name="plus-circle" size={50} color={colors.muted} />
+              </TouchableOpacity>
+            )}
+          </View>
           <CustomInput
             value={title}
             setValue={setTitle}
@@ -159,6 +173,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     flex: 1,
+  },
+  imageContainer: {
+    display: "flex",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    height: 250,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    elevation: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   TopBarContainer: {
     width: "100%",

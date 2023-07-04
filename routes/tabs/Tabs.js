@@ -50,13 +50,13 @@ const Tabs = ({ navigation, route }) => {
               <TouchableOpacity disabled>
                 {focused == true ? (
                   <Ionicons
-                    name="ios-apps-sharp"
+                    name="grid"
                     size={29}
                     color={colors.primary}
                   />
                 ) : (
                   <Ionicons
-                    name="ios-apps-sharp"
+                    name="grid"
                     size={29}
                     color={colors.muted}
                   />
@@ -68,13 +68,13 @@ const Tabs = ({ navigation, route }) => {
               <TouchableOpacity disabled>
                 {focused == true ? (
                   <Ionicons
-                    name="cart-outline"
+                    name="shopping-cart"
                     size={29}
                     color={colors.primary}
                   />
                 ) : (
                   <Ionicons
-                    name="cart-outline"
+                    name="shopping-cart"
                     size={29}
                     color={colors.muted}
                   />

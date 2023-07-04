@@ -3,7 +3,7 @@ import React from "react";
 import Ionicons from 'react-native-vector-icons/Feather';
 import { colors } from "../../constants";
 
-const UserList = ({ username, email }) => {
+const UserList = ({ username, email,phone }) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -16,6 +16,7 @@ const UserList = ({ username, email }) => {
       <View style={styles.userInfoContainer}>
         <Text style={styles.usernameText}>{username}</Text>
         <Text style={styles.userEmailText}>{email}</Text>
+        <Text style={styles.userEmailText}>{phone}</Text>
       </View>
     </View>
   );

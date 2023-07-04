@@ -14,9 +14,10 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput";
 import ProgressDialog from "react-native-progress-dialog";
 import OrderList from "../../components/OrderList/OrderList";
+import pb from "../../constants/Network";
 
 const ViewOrdersScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params;
+  const { authUser } = route.params;
   const [user, setUser] = useState({});
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);
@@ -24,7 +25,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [orders, setOrders] = useState([]);
-  // const [foundItems, setFoundItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
 
   //method to convert the authUser to json object
@@ -46,12 +47,11 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   };
 
   //method to navigate to order detail screen of specific order
-  // const handleOrderDetail = (item) => {
-  //   navigation.navigate("vieworderdetails", {
-  //     orderDetail: item,
-  //     Token: getToken(authUser),
-  //   });
-  // };
+  const handleOrderDetail = (item) => {
+    navigation.navigate("vieworderdetails", {
+      orderDetail: item
+    });
+  };
 
   //method the fetch the order data from server using API call
   // const fetchOrders = () => {
@@ -82,6 +82,20 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   //       console.log("error", error);
   //     });
   // };
+  const fetchOrders = async () => {
+    const filterExpression = `uploaded.name='${authUser.name}'`;
+    const records = await pb.collection('products').getFullList({
+      filter: filterExpression,
+      expand: 'ordered'
+    });
+    const order = records.map((p) => p['expand']['ordered']).flat()
+    // console.log(records.map((p) => p['expand']['category']).flat())
+    setOrders(order);
+    setFoundItems(order);
+    setError("");
+    setIsloading(false);
+    console.log(records)
+  }
 
   //method to filer the orders for by title [search bar]
   // const filter = () => {
@@ -101,10 +115,10 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   // }, [filterItem]);
 
   //fetch the orders on initial render
-  // useEffect(() => {
-  //   fetchOrders();
-  // }, []);
-const foundItems = [2,3,4,5]
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ProgressDialog visible={isloading} label={label} />

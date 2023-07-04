@@ -11,16 +11,17 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import Ionicons from 'react-native-vector-icons/Feather';
-import AntDesign  from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import CategoryList from "../../components/CategoryList";
 import icon from "../../assets/logo/logo_white2.png";
+import pb from "../../constants/Network";
 
 const ViewCategoryScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params;
-  // const [user, setUser] = useState({});
+  const { authUser } = route.params;
+  const [user, setUser] = useState({});
 
   // const getToken = (obj) => {
   //   try {
@@ -38,8 +39,8 @@ const ViewCategoryScreen = ({ navigation, route }) => {
 
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
-  // const [categories, setCategories] = useState([]);
-  // const [foundItems, setFoundItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
 
   //method call on Pull refresh
@@ -106,34 +107,48 @@ const ViewCategoryScreen = ({ navigation, route }) => {
   };
 
   //method the fetch the catgeories from server using API call
-  const fetchCategories = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", getToken(authUser));
+  // const fetchCategories = () => {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("x-auth-token", getToken(authUser));
 
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-    setIsloading(true);
-    fetch(`${network.serverip}/categories`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          setCategories(result.categories);
-          setFoundItems(result.categories);
-          setError("");
-        } else {
-          setError(result.message);
-        }
-        setIsloading(false);
-      })
-      .catch((error) => {
-        setIsloading(false);
-        setError(error.message);
-        console.log("error", error);
-      });
-  };
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: myHeaders,
+  //     redirect: "follow",
+  //   };
+  //   setIsloading(true);
+  //   fetch(`${network.serverip}/categories`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       if (result.success) {
+  //         setCategories(result.categories);
+  //         setFoundItems(result.categories);
+  //         setError("");
+  //       } else {
+  //         setError(result.message);
+  //       }
+  //       setIsloading(false);
+  //     })
+  //     .catch((error) => {
+  //       setIsloading(false);
+  //       setError(error.message);
+  //       console.log("error", error);
+  //     });
+  // };
+  const fetchCategories = async () => {
+    const filterExpression = `uploaded.name='${authUser.name}'`;
+    const records = await pb.collection('products').getFullList({
+      filter: filterExpression,
+      expand: 'category'
+    });
+    const orders = records.map((p) => p['expand']['category']).flat()
+    console.log(records.map((p) => p['expand']['category']).flat())
+    setCategories(orders);
+    setFoundItems(orders);
+    setError("");
+    setIsloading(false);
+   // console.log(categories)
+  }
 
   //method to filer the product for by title [search bar]
   // const filter = () => {
@@ -154,10 +169,10 @@ const ViewCategoryScreen = ({ navigation, route }) => {
   // }, [filterItem]);
 
   //fetch the categories on initial render
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, []);
-  const foundItems = [1,2,3];
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
 
   return (
     <View style={styles.container}>
@@ -180,7 +195,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
             navigation.navigate("addcategories", { authUser: authUser });
           }}
         >
-          <AntDesign name="plussquare" size={30} color={colors.muted} />
+          <AntDesign name="plus-square" size={30} color={colors.muted} />
         </TouchableOpacity>
       </View>
       <View style={styles.screenNameContainer}>
@@ -208,12 +223,12 @@ const ViewCategoryScreen = ({ navigation, route }) => {
         {foundItems && foundItems.length == 0 ? (
           <Text>{`No category found with the title of ${filterItem}!`}</Text>
         ) : (
-          foundItems.map((item, index) => (
+          foundItems.filter((item, index, self) => self.findIndex(i => i.id === item.id) === index).map((item, index) => (
             <CategoryList
-              icon={icon}
-              key={4}
-              title={'names'}
-              description={'hdsjhsjhdjsjdjsjdsdjs'}
+              image={`${pb.baseUrl}/api/files/category/${item.id}/${item.image}`}
+              key={item.id}
+              title={item.name}
+              description={item.description}
               onPressEdit={() => {
                 handleEdit(item);
               }}

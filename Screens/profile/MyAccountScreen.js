@@ -17,49 +17,50 @@ const MyAccountScreen = ({ navigation, route }) => {
   const [showBox, setShowBox] = useState(true);
   const [error, setError] = useState("");
   const { user } = route.params;
-  const userID = user["_id"];
+  const userID = user["id"];
 
   //method for alert
-  const showConfirmDialog = (id) => {
-    return Alert.alert(
-      "Are your sure?",
-      "Are you sure you want to remove your account?",
-      [
-        {
-          text: "Yes",
-          onPress: () => {
-            setShowBox(false);
-            DeleteAccontHandle(id);
-          },
-        },
-        {
-          text: "No",
-        },
-      ]
-    );
-  };
+  // const showConfirmDialog = (id) => {
+  //   return Alert.alert(
+  //     "Are your sure?",
+  //     "Are you sure you want to remove your account?",
+  //     [
+  //       {
+  //         text: "Yes",
+  //         onPress: () => {
+  //           setShowBox(false);
+  //           DeleteAccontHandle(id);
+  //         },
+  //       },
+  //       {
+  //         text: "No",
+  //       },
+  //     ]
+  //   );
+  // };
 
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
+  // var requestOptions = {
+  //   method: "GET",
+  //   redirect: "follow",
+  // };
 
   //method to delete the account using API call
-  const DeleteAccontHandle = (userID) => {
-    let fetchURL = network.serverip + "/delete-user?id=" + String(userID);
-    console.log(fetchURL);
-    fetch(fetchURL, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success == true) {
-          console.log(result.data);
-          navigation.navigate("login");
-        } else {
-          setError(result.message);
-        }
-      })
-      .catch((error) => console.log("error", error));
-  };
+  // const DeleteAccontHandle = (userID) => {
+  //   let fetchURL = network.serverip + "/delete-user?id=" + String(userID);
+  //   console.log(fetchURL);
+  //   fetch(fetchURL, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       if (result.success == true) {
+  //         console.log(result.data);
+  //         navigation.navigate("login");
+  //       } else {
+  //         setError(result.message);
+  //       }
+  //     })
+  //     .catch((error) => console.log("error", error));
+  // };
+  // console.log(userID);
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
@@ -70,7 +71,7 @@ const MyAccountScreen = ({ navigation, route }) => {
           }}
         >
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="arrow-left-circle"
             size={30}
             color={colors.muted}
           />
@@ -82,8 +83,8 @@ const MyAccountScreen = ({ navigation, route }) => {
       <View style={styles.UserProfileCardContianer}>
         <UserProfileCard
           Icon={Ionicons}
-          name={'tony'}
-          email={'tonynemes@gmail.com'}
+          name={user.username}
+          email={user.email}
         />
       </View>
       <View style={styles.OptionsContainer}>

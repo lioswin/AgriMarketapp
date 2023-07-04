@@ -16,47 +16,47 @@ import {
 //   import AsyncStorage from "@react-native-async-storage/async-storage";
   
   const MyOrderScreen = ({ navigation, route }) => {
-    // const { user } = route.params;
+    const { user } = route.params;
     const [isloading, setIsloading] = useState(false);
     const [label, setLabel] = useState("Please wait...");
     const [refeshing, setRefreshing] = useState(false);
     const [alertType, setAlertType] = useState("error");
     const [error, setError] = useState("");
     // const [orders, setOrders] = useState([]);
-    // const [UserInfo, setUserInfo] = useState({});
+    const [UserInfo, setUserInfo] = useState({});
   
     // //method to remove the authUser from aysnc storage and navigate to login
-    // const logout = async () => {
-    //   await AsyncStorage.removeItem("authUser");
-    //   navigation.replace("login");
-    // };
+    const logout = async () => {
+      await AsyncStorage.removeItem("authUser");
+      navigation.replace("login");
+    };
   
     // //method to convert the authUser to json object
-    // const convertToJSON = (obj) => {
-    //   try {
-    //     setUserInfo(JSON.parse(obj));
-    //   } catch (e) {
-    //     setUserInfo(obj);
-    //   }
-    // };
+    const convertToJSON = (obj) => {
+      try {
+        setUserInfo(JSON.parse(obj));
+      } catch (e) {
+        setUserInfo(obj);
+      }
+    };
   
     // //method to convert the authUser to json object and return token
-    // const getToken = (obj) => {
-    //   try {
-    //     setUserInfo(JSON.parse(obj));
-    //   } catch (e) {
-    //     setUserInfo(obj);
-    //     return user.token;
-    //   }
-    //   return UserInfo.token;
-    // };
+    const getToken = (obj) => {
+      try {
+        setUserInfo(JSON.parse(obj));
+      } catch (e) {
+        setUserInfo(obj);
+        return user.token;
+      }
+      return UserInfo.token;
+    };
   
     // //method call on pull refresh
-    // const handleOnRefresh = () => {
-    //   setRefreshing(true);
-    //   fetchOrders();
-    //   setRefreshing(false);
-    // };
+    const handleOnRefresh = () => {
+      setRefreshing(true);
+      fetchOrders();
+      setRefreshing(false);
+    };
   
     // //method to navigate to order detail screen of a specific order
     // const handleOrderDetail = (item) => {

@@ -81,25 +81,25 @@ const OrderList = ({ onPress }) => {
         </View>
       )} */}
        <View style={styles.innerRow}>
-          <Text style={styles.secondaryText}> tony</Text>
+          <Text style={styles.secondaryText}> Rose</Text>
         </View>
 
         <View style={styles.innerRow}>
-          <Text style={styles.secondaryText}>tonyrite@gmail.com</Text>
+          <Text style={styles.secondaryText}>roserite@gmail.com</Text>
         </View>
         {/* //here */}
       <View style={styles.innerRow}>
-        <Text style={styles.secondaryText}>Quantity : 565</Text>
-        <Text style={styles.secondaryText}>Total Amount : 45000$</Text>
+        <Text style={styles.secondaryText}>Quantity : 50</Text>
+        <Text style={styles.secondaryText}>Total Amount : 45000Tsh</Text>
       </View>
       <View style={styles.innerRow}>
         <TouchableOpacity style={styles.detailButton} onPress={onPress}>
           <Text>Details</Text>
         </TouchableOpacity>
-        <Text style={styles.secondaryText}>
+        {/* <Text style={styles.secondaryText}> */}
           {/* {item?.status} */}
-          on
-          </Text>
+          {/* on
+          </Text> */}
       </View>
     </View>
   );

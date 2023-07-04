@@ -12,11 +12,11 @@ import { colors, network } from "../../constants";
 import Ionicons from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import WishList from "../../components/WishList/WishList";
 
 const MyWishlistScreen = ({ navigation, route }) => {
-  // const { user } = route.params;
+  const { user } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Please wait...");
   const [refeshing, setRefreshing] = useState(false);

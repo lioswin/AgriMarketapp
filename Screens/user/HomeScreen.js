@@ -34,16 +34,16 @@ const category = [
     },
     {
         _id: "62fe241958f7aa8230817f83",
-        title: "Roots",
+        title: "Tubers",
         image: require("../../assets/icons/cosmetics.png"),
     },
     {
         _id: "62fe246858f7aa8230817f8c",
-        title: "Groceries",
+        title: "Vegetables",
         image: require("../../assets/icons/grocery.png"),
     },
 ];
-
+// to add  a way to retrive this from database
 const slides = [
     require("../../assets/image/banners/banner.png"),
     require("../../assets/image/banners/banner.png"),
@@ -112,7 +112,7 @@ const HomeScreen = ({ navigation, route }) => {
         const products = await pb.collection('products').getFullList({
             sort: '-created',
         });
-         console.log(products)
+        //  console.log(products)
         setProducts(products);
         setError("");
         let payload = [];
@@ -121,7 +121,7 @@ const HomeScreen = ({ navigation, route }) => {
             payload.push(searchableItem);
             setSearchItems(payload)
           })
-          console.log(searchItems);
+        //   console.log(searchItems);
     }
     //method call on pull refresh
     const handleOnRefresh = () => {

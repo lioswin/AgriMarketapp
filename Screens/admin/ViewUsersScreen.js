@@ -10,15 +10,16 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import Ionicons from 'react-native-vector-icons/Feather';
-import  AntDesign  from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import UserList from "../../components/UserList/UserList";
+import pb from "../../constants/Network";
 
 const ViewUsersScreen = ({ navigation, route }) => {
   const [name, setName] = useState("");
- // const { authUser } = route.params;
+  const { authUser } = route.params;
   const [user, setUser] = useState({});
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);
@@ -26,9 +27,8 @@ const ViewUsersScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [users, setUsers] = useState([]);
-  // const [foundItems, setFoundItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
-  const foundItems =[1,2,3,4];
   //method to convert the authUser to json object
   // const getToken = (obj) => {
   //   try {
@@ -69,6 +69,20 @@ const ViewUsersScreen = ({ navigation, route }) => {
   //       console.log("error", error);
   //     });
   // };
+  const fetchUsers = async () => {
+    const filterExpression = `uploaded.name='${authUser.name}'`;
+    const records = await pb.collection('products').getFullList({
+      filter: filterExpression,
+      expand: 'ordered'
+    });
+    const orders = records.map((p) => p['expand']['ordered']).flat()
+    // console.log(records.map((p) => p['expand']['category']).flat())
+    setUsers(orders);
+    setFoundItems(orders);
+    setError("");
+    setIsloading(false);
+    console.log(users)
+  }
 
   //method call on pull refresh
   const handleOnRefresh = () => {
@@ -98,9 +112,9 @@ const ViewUsersScreen = ({ navigation, route }) => {
   // }, [filterItem]);
 
   //fetch the orders on initial render
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -124,10 +138,10 @@ const ViewUsersScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>View Users</Text>
+          <Text style={styles.screenNameText}>View Buyers</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>View all Users</Text>
+          <Text style={styles.screenNameParagraph}>View all Buyers</Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
@@ -147,12 +161,12 @@ const ViewUsersScreen = ({ navigation, route }) => {
         {foundItems && foundItems.length == 0 ? (
           <Text>{`No user found with the name of ${filterItem}!`}</Text>
         ) : (
-          foundItems.map((item, index) => (
+          foundItems.filter((item,index,self)=>self.findIndex(i=>i.id===item.id)==index).map((item, index) => (
             <UserList
               key={2}
-              username={"Nipa"}
-              email={"nipa@gmail.com"}
-              usertype={'b'}
+              username={item.username}
+              email={item.email}
+              phone={item.phone}
             />
           ))
         )}

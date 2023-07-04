@@ -11,14 +11,14 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import Ionicons from 'react-native-vector-icons/Feather';
-import AntDesign  from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/Feather';
 import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
-
+import pb from "../../constants/Network";
 const ViewProductScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params;
+  const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);
   const [alertType, setAlertType] = useState("error");
@@ -26,22 +26,27 @@ const ViewProductScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
-  // const [foundItems, setFoundItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
+  const [cat,setCat] = useState("")
 
-  // var myHeaders = new Headers();
-  // myHeaders.append("x-auth-token", authUser.token);
+  // query data from db
 
-  // var requestOptions = {
-  //   method: "GET",
-  //   headers: myHeaders,
-  //   redirect: "follow",
-  // };
-
-  // var ProductListRequestOptions = {
-  //   method: "GET",
-  //   redirect: "follow",
-  // };
+  const fetchProduct = async () => {
+    const filterExpression = `uploaded.name='${authUser.name}'`;
+    const records = await pb.collection('products').getFullList({
+      filter: filterExpression,
+      expand: 'category'
+    });
+    const orders = records.map((p) => p['expand']['category']).flat()
+    setProducts(records);
+    // console.log(records.map((p) => p['expand']['category']).flat())
+    setCat(orders)
+    console.log(cat)
+    setFoundItems(records);
+    setError("");
+    setIsloading(false);
+  }
 
   //method call on pull refresh
   const handleOnRefresh = () => {
@@ -93,29 +98,6 @@ const ViewProductScreen = ({ navigation, route }) => {
     );
   };
 
-  //method the fetch the product data from server using API call
-  // const fetchProduct = () => {
-  //   setIsloading(true);
-  //   fetch(`${network.serverip}/products`, ProductListRequestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.success) {
-  //         setProducts(result.data);
-  //         setFoundItems(result.data);
-  //         setError("");
-  //         setIsloading(false);
-  //       } else {
-  //         setError(result.message);
-  //         setIsloading(false);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //       console.log("error", error);
-  //       setIsloading(false);
-  //     });
-  // };
-
   //method to filer the orders for by title [search bar]
   // const filter = () => {
   //   const keyword = filterItem;
@@ -134,11 +116,11 @@ const ViewProductScreen = ({ navigation, route }) => {
   //   filter();
   // }, [filterItem]);
 
+  // bado search feature
   //fetch the categories on initial render
-  // useEffect(() => {
-  //   fetchProduct();
-  // }, []);
-const foundItems =[3,4,5,5,6,7,7,7,6,5,5,4,4,5,5,4]
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   return (
     <View style={styles.container}>
       <ProgressDialog visible={isloading} label={label} />
@@ -188,14 +170,15 @@ const foundItems =[3,4,5,5,6,7,7,7,6,5,5,4,4,5,5,4]
         {foundItems && foundItems.length == 0 ? (
           <Text>{`No product found with the name of ${filterItem}!`}</Text>
         ) : (
-          foundItems.map((product, index) => {
+          foundItems.map((product,index) => {
             return (
+              // description for quantity
               <ProductList
-                key={3}
-                // image={`${network.serverip}/uploads/${product?.image}`}
-                title={'tony'}
-                category={'gjkfgfg'}
-                price={'1000'}
+                key={index}
+                image={`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`}
+                title={product.name}
+                category={`${cat[index].name}`}
+                price={`${product.price}Tsh`}
                 qantity={'4'}
                 onPressView={() => {
                   console.log("view is working " + product._id);

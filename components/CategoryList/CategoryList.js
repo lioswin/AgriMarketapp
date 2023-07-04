@@ -4,7 +4,7 @@ import  MaterialIcons  from 'react-native-vector-icons/Feather';
 import  { colors }  from "../../constants";
 
 const CategoryList = ({
-  icon,
+  image,
   title,
   description,
   onPressEdit,
@@ -15,19 +15,16 @@ const CategoryList = ({
       <View style={styles.detailContainer}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ icon }}
+            source={{ uri:image }}
             style={{ height: 30, width: "auto", resizeMode: "contain" }}
           />
         </View>
         <View style={styles.categoryInfo}>
           <Text style={styles.categoryTitle}>{title}</Text>
-          {/* <Text style={styles.categoryDescription}>{`${description.substring(
+          <Text style={styles.categoryDescription}>{`${description.substring(
             0,
             35
-          )}..`}</Text> */}
-          <Text style={styles.categoryDescription}>
-            {description}
-          </Text>
+          )}..`}</Text>
         </View>
       </View>
       <View style={styles.categoryActionContainer}>

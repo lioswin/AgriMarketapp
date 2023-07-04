@@ -28,7 +28,6 @@ const UserProfileScreen = ({ navigation, route }) => {
   useEffect(() => {
     convertToJSON(user);
   }, []);
-  
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
@@ -43,8 +42,8 @@ const UserProfileScreen = ({ navigation, route }) => {
       <View style={styles.UserProfileCardContianer}>
         <UserProfileCard
           Icon={Ionicons}
-          name={'Nipa'}
-          email={'Nipa@gmail.com'}
+          name={userInfo?.username}
+          email={userInfo?.email}
         />
       </View>
       <View style={styles.OptionsContainer}>

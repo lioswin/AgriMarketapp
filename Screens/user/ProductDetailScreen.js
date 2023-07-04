@@ -14,12 +14,12 @@ import CustomButton from "../../components/CustomButton";
 // import { useSelector, useDispatch } from "react-redux";
 // import { bindActionCreators } from "redux";
 // import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
-import productImage from "../../assets/logo/logo_white2.png";
+import pb from "../../constants/Network";
 
 const ProductDetailScreen = ({ navigation, route }) => {
-  // const { product } = route.params;
+  const { product } = route.params;
   // const cartproduct = useSelector((state) => state.product);
   // const dispatch = useDispatch();
 
@@ -30,16 +30,16 @@ const ProductDetailScreen = ({ navigation, route }) => {
   //   addCartItem(item);
   // };
 
-  //remove the authUser from async storage and navigate to login
-  // const logout = async () => {
-  //   await AsyncStorage.removeItem("authUser");
-  //   navigation.replace("login");
-  // };
+  // remove the authUser from async storage and navigate to login
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
 
   const [onWishlist, setOnWishlist] = useState(false);
-  // const [avaiableQuantity, setAvaiableQuantity] = useState(0);
-  // const [quantity, setQuantity] = useState(0);
-  // const [productImage, SetProductImage] = useState(" ");
+  const [avaiableQuantity, setAvaiableQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [productImage, SetProductImage] = useState(" ");
   // const [wishlistItems, setWishlistItems] = useState([]);
   const [error, setError] = useState("");
   const [isDisable, setIsDisbale] = useState(true);
@@ -180,17 +180,17 @@ const ProductDetailScreen = ({ navigation, route }) => {
   // };
 
   //set quantity, avaiableQuantity, product image and fetch wishlist on initial render
-  // useEffect(() => {
-  //   setQuantity(0);
-  //   setAvaiableQuantity(product.quantity);
-  //   SetProductImage(`${network.serverip}/uploads/${product?.image}`);
-  //   fetchWishlist();
-  // }, []);
+  useEffect(() => {
+    setQuantity(0);
+    setAvaiableQuantity(product.quantity);
+    SetProductImage(`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`);
+    // fetchWishlist();
+  }, []);
 
   //render whenever the value of wishlistItems change
   // useEffect(() => {}, [wishlistItems]);
-  const cartproduct =[2,4,5];
-  const avaiableQuantity =[3,4];
+  const cartproduct = [2, 4, 5];
+  // const avaiableQuantity =[3,4];
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -224,13 +224,13 @@ const ProductDetailScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.productImageContainer}>
-          <Image source={ productImage } style={styles.productImage} />
+          <Image source={{ uri: productImage }} style={styles.productImage} />
         </View>
         <CustomAlert message={error} type={alertType} />
         <View style={styles.productInfoContainer}>
           <View style={styles.productInfoTopContainer}>
             <View style={styles.productNameContaier}>
-              <Text style={styles.productNameText}>fghjkl;l</Text>
+              <Text style={styles.productNameText}>{product.name}</Text>
             </View>
             <View style={styles.infoButtonContainer}>
               <View style={styles.wishlistButtonContainer}>
@@ -253,17 +253,17 @@ const ProductDetailScreen = ({ navigation, route }) => {
               </View>
               <View style={styles.productPriceContainer}>
                 <Text style={styles.secondaryTextSm}>Price:</Text>
-                <Text style={styles.primaryTextSm}>1000$</Text>
+                <Text style={styles.primaryTextSm}>{product.price}Tsh</Text>
               </View>
             </View>
             <View style={styles.productDescriptionContainer}>
               <Text style={styles.secondaryTextSm}>Description:</Text>
-              <Text>sdjhcbsdbckjsdbcsdkdnd</Text>
+              <Text>{product.description}</Text>
             </View>
           </View>
           <View style={styles.productInfoBottomContainer}>
             <View style={styles.counterContainer}>
-              <View style={styles.counter}>
+              {/* <View style={styles.counter}>
                 <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
@@ -281,18 +281,18 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 >
                   <Text style={styles.counterButtonText}>+</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
             <View style={styles.productButtonContainer}>
               {avaiableQuantity > 0 ? (
                 <CustomButton
-                  text={"Add to Cart"}
+                  text={"Contact Seller"}
                   onPress={() => {
                     handleAddToCat(product);
                   }}
                 />
               ) : (
-                <CustomButton text={"Out of Stock"} disabled={false} />
+                <CustomButton text={"Out of Stock"} disabled={true} />
               )}
             </View>
           </View>
@@ -354,9 +354,9 @@ const styles = StyleSheet.create({
     elevation: 25,
   },
   productImage: {
-    height: 300,
-    width: 300,
-    resizeMode: "contain",
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   productInfoTopContainer: {
     marginTop: 20,
@@ -446,6 +446,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: 20,
     paddingRight: 20,
+    marginBottom:90,
+    fontWeight:400,
   },
   iconContainer: {
     display: "flex",
@@ -495,7 +497,7 @@ const styles = StyleSheet.create({
   cartIconContainer: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   cartItemCountContainer: {
     position: "absolute",

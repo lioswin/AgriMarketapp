@@ -21,9 +21,10 @@ import { colors, network } from "../../constants";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import CustomInput from "../../components/CustomInput";
+import pb from "../../constants/Network";
 
 const CategoriesScreen = ({ navigation, route }) => {
-  // const { categoryID } = route.params;
+  const { categoryID } = route.params;
 
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -51,9 +52,9 @@ const CategoriesScreen = ({ navigation, route }) => {
   };
 
   //method to add the product to cart (redux)
-  const handleAddToCat = (product) => {
-    addCartItem(product);
-  };
+  // const handleAddToCat = (product) => {
+  //   addCartItem(product);
+  // };
 
   //method call on pull refresh
   const handleOnRefresh = () => {
@@ -62,28 +63,25 @@ const CategoriesScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  // var headerOptions = {
-  //   method: "GET",
-  //   redirect: "follow",
-  // };
+  // categories
   const category = [
     {
-      _id: "62fe244f58f7aa8230817f89",
+      id: "r2az29q8o19novo",
       title: "Grains",
       image: require("../../assets/icons/garments.png"),
     },
     {
-      _id: "62fe243858f7aa8230817f86",
+      id: "szh9l1gr0j6dfyl",
       title: "Fruits",
       image: require("../../assets/icons/electronics.png"),
     },
     {
-      _id: "62fe241958f7aa8230817f83",
+      id: "ekntpo0mvahbku1",
       title: "roots",
       image: require("../../assets/icons/cosmetics.png"),
     },
     {
-      _id: "62fe246858f7aa8230817f8c",
+      id: "u75e7zp0cyrgi2k",
       title: "Vegetables",
       image: require("../../assets/icons/grocery.png"),
     },
@@ -91,60 +89,46 @@ const CategoriesScreen = ({ navigation, route }) => {
   const [selectedTab, setSelectedTab] = useState(category[0]);
 
   //method to fetch the product from server using API call
-  // const fetchProduct = () => {
-  //   var headerOptions = {
-  //     method: "GET",
-  //     redirect: "follow",
-  //   };
-  //   fetch(`${network.serverip}/products`, headerOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.success) {
-  //         setProducts(result.data);
-  //         setFoundItems(result.data);
-  //         setError("");
-  //       } else {
-  //         setError(result.message);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //       console.log("error", error);
-  //     });
-  // };
+  const fetchProduct = async () => {
+    const goods = await pb.collection('products').getFullList({
+      sort: '-created',
+    });
+    console.log(goods)
+    setProducts(goods);
+    setFoundItems(goods);
+    setError("");
+  }
 
   //listener call on tab focus and initlize categoryID
-  // navigation.addListener("focus", () => {
-  //   if (categoryID) {
-  //     setSelectedTab(categoryID);
-  //   }
-  // });
+  navigation.addListener("focus", () => {
+    if (categoryID) {
+      setSelectedTab(categoryID);
+    }
+  });
 
   //method to filter the product according to user search in selected category
-  // const filter = () => {
-  //   const keyword = filterItem;
-  //   if (keyword !== "") {
-  //     const results = products.filter((product) => {
-  //       return product?.title.toLowerCase().includes(keyword.toLowerCase());
-  //     });
-
-  //     setFoundItems(results);
-  //   } else {
-  //     setFoundItems(products);
-  //   }
-  // };
-
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = products.filter((product) => {
+        return product?.name.toLowerCase().includes(keyword.toLowerCase());
+      });
+      setFoundItems(results);
+    } else {
+      setFoundItems(products);
+    }
+  };
+  
   //render whenever the value of filterItem change
-  // useEffect(() => {
-  //   filter();
-  // }, [filterItem]);
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
 
   //fetch the product on initial render
-  // useEffect(() => {
-  //   fetchProduct();
-  // }, []);
-const cartproduct =[3,4,5]
-console.log(cartproduct);
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+  const cartproduct = [3, 4, 5]
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -206,7 +190,7 @@ console.log(cartproduct);
         />
 
         {foundItems.filter(
-          (product) => product?.category?._id === selectedTab?._id
+          (product) => product?.category.toString() === selectedTab?.id
         ).length === 0 ? (
           <View style={styles.noItemContainer}>
             <View
@@ -232,7 +216,7 @@ console.log(cartproduct);
         ) : (
           <FlatList
             data={foundItems.filter(
-              (product) => product?.category?._id === selectedTab?._id
+              (product) => product?.category.toString() === selectedTab?.id
             )}
             refreshControl={
               <RefreshControl
@@ -240,7 +224,7 @@ console.log(cartproduct);
                 onRefresh={handleOnRefresh}
               />
             }
-            keyExtractor={(index, item) => `${index}-${item}`}
+            keyExtractor={(item) => item.id}
             contentContainerStyle={{ margin: 10 }}
             numColumns={2}
             renderItem={({ item: product }) => (
@@ -252,8 +236,8 @@ console.log(cartproduct);
               >
                 <ProductCard
                   cardSize={"large"}
-                  name={product.title}
-                  image={`${network.serverip}/uploads/${product.image}`}
+                  name={product.name}
+                  image={`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`}
                   price={product.price}
                   quantity={product.quantity}
                   onPress={() => handleProductPress(product)}
