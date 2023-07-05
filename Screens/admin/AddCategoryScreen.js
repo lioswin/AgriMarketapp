@@ -14,50 +14,63 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import Ionicons from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
-// import * as ImagePicker from "expo-image-picker";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ProgressDialog from "react-native-progress-dialog";
-// import { AntDesign } from "@expo/vector-icons";
+import AntDesign from 'react-native-vector-icons/Feather';
+import { useCallback } from 'react';
+import pb from "../../constants/Network";
 
 const AddCategoryScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params; //authUser data
+  const { authUser } = route.params; //authUser data
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState("easybuycat.png");
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [alertType, setAlertType] = useState("error");
   const [user, setUser] = useState({});
+  const [formData, setFormData] = useState(new FormData());
 
   //method to convert the authUser to json object.
-  // const getToken = (obj) => {
-  //   try {
-  //     setUser(JSON.parse(obj));
-  //   } catch (e) {
-  //     setUser(obj);
-  //     return obj.token;
-  //   }
-  //   return JSON.parse(obj).token;
-  // };
+  const getToken = (obj) => {
+    try {
+      setUser(JSON.parse(obj));
+    } catch (e) {
+      setUser(obj);
+      return obj.token;
+    }
+    return JSON.parse(obj).token;
+  };
+
+  const pickImage = useCallback(() => {
+    // No permissions request is necessary for launching the image library
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      },
+      (response) => {
+        if (!response.didCancel) {
+          const imageUri = response.assets[0].uri;
+          setImage(imageUri)
+          const imageFileName = response.assets[0].fileName; // You can customize the image filename
+          const imageFileType = response.assets[0].type;
+          formData.append('image', {
+            uri: imageUri,
+            name: imageFileName,
+            type: imageFileType,
+          });
+          setFormData(formData)
+          // upload();
+        }
+      }
+    );
+  }, [formData]);
 
   //Method for imput validation post data to server to insert category using API call
-  const addCategoryHandle = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", authUser.token);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      title: title,
-      image: image,
-      description: description,
-    });
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
+  const addCategoryHandle = async () => {
     setIsloading(true);
     //[check validation] -- Start
     if (title == "") {
@@ -71,24 +84,14 @@ const AddCategoryScreen = ({ navigation, route }) => {
       setIsloading(false);
     } else {
       //[check validation] -- End
-      fetch(network.serverip + "/category", requestOptions) //API call
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          if (result.success == true) {
-            setIsloading(false);
-            setAlertType("success");
-            setError(result.message);
-            setTitle("");
-            setDescription("");
-          }
-        })
-        .catch((error) => {
-          setIsloading(false);
-          setError(error.message);
-          setAlertType("error");
-          console.log("error", error);
-        });
+      formData.append('name', title);
+      formData.append('description', description);
+      const record = await pb.collection('category').create(formData);
+      console.log(record)
+      setIsloading(false);
+      setError("")
+      setDescription("")
+      setTitle("")
     }
   };
 
@@ -124,16 +127,16 @@ const AddCategoryScreen = ({ navigation, route }) => {
         style={{ flex: 1, width: "100%" }}
       >
         <View style={styles.formContainer}>
-        <View style={styles.imageContainer}>
+          <View style={styles.imageContainer}>
             {image ? (
-              <TouchableOpacity style={styles.imageHolder} onPress={()=>{null}}>
+              <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
                 <Image
                   source={{ uri: image }}
                   style={{ width: 200, height: 200 }}
                 />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.imageHolder} onPress={()=>{null}}>
+              <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
                 <AntDesign name="plus-circle" size={50} color={colors.muted} />
               </TouchableOpacity>
             )}

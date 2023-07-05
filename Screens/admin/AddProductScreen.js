@@ -12,16 +12,18 @@ import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import  AntDesign from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/Feather';
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
-import * as ImagePicker from "expo-image-picker";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ProgressDialog from "react-native-progress-dialog";
 import Ionicons from 'react-native-vector-icons/Feather';
 import { useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
+import pb from "../../constants/Network";
+import { useCallback } from 'react';
 
 const AddProductScreen = ({ navigation, route }) => {
-  // const { authUser } = route.params;
+  const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -37,12 +39,8 @@ const AddProductScreen = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [statusDisable, setStatusDisable] = useState(false);
-  const [items, setItems] = useState([
-    { label: "Pending", value: "pending" },
-    { label: "Shipped", value: "shipped" },
-    { label: "Delivered", value: "delivered" },
-  ]);
-  var payload = [];
+  const [items, setItems] = useState([]);
+  const [formData, setFormData] = useState(new FormData());
 
   //method to convert the authUser to json object.
   const getToken = (obj) => {
@@ -55,106 +53,50 @@ const AddProductScreen = ({ navigation, route }) => {
     return JSON.parse(obj).token;
   };
 
-  //Method : Fetch category data from using API call and store for later you in code
-  const fetchCategories = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", getToken(authUser));
 
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-    setIsloading(true);
-    fetch(`${network.serverip}/categories`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          setCategories(result.categories);
-          result.categories.forEach((cat) => {
-            let obj = {
-              label: cat.title,
-              value: cat._id,
-            };
-            payload.push(obj);
-          });
-          setItems(payload);
-          setError("");
-        } else {
-          setError(result.message);
-        }
-        setIsloading(false);
-      })
-      .catch((error) => {
-        setIsloading(false);
-        setError(error.message);
-        console.log("error", error);
+  const fetchCategories = async () => {
+    try {
+      const records = await pb.collection('category').getFullList({
+        sort: '-created',
       });
-  };
-
-  // var myHeaders = new Headers();
-  // myHeaders.append("x-auth-token", authUser.token);
-  // myHeaders.append("Content-Type", "application/json");
-
-  // const upload = async () => {
-  //   console.log("upload-F:", image);
-
-  //   var formdata = new FormData();
-  //   formdata.append("photos", image, "product.png");
-
-  //   var ImageRequestOptions = {
-  //     method: "POST",
-  //     body: formdata,
-  //     redirect: "follow",
-  //   };
-
-  //   fetch(
-  //     "https://api-easybuy.herokuapp.com/photos/upload",
-  //     ImageRequestOptions
-  //   )
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       console.log(result);
-  //     })
-  //     .catch((error) => console.log("error", error));
-  // };
-
-  // var raw = JSON.stringify({
-  //   title: title,
-  //   sku: sku,
-  //   price: price,
-  //   image: image,
-  //   description: description,
-  //   category: category,
-  //   quantity: quantity,
-  // });
-
-  // var requestOptions = {
-  //   method: "POST",
-  //   headers: myHeaders,
-  //   body: raw,
-  //   redirect: "follow",
-  // };
-
-  //Method for selecting the image from device gallery
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
-    });
-
-    if (!result.cancelled) {
-      console.log(result);
-      setImage(result.uri);
-      upload();
+      setCategories(records);
+    } catch (error) {
+      setError("Error fetching categories.");
+    } finally {
+      setIsloading(false);
     }
   };
 
+  const pickImage = useCallback(() => {
+    // No permissions request is necessary for launching the image library
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      },
+      (response) => {
+        if (!response.didCancel) {
+          const imageUri = response.assets[0].uri;
+          setImage(imageUri)
+          const imageFileName = response.assets[0].fileName; // You can customize the image filename
+          const imageFileType = response.assets[0].type;
+          formData.append('image', {
+            uri: imageUri,
+            name: imageFileName,
+            type: imageFileType,
+          });
+          setFormData(formData)
+          // upload();
+        }
+      }
+    );
+  }, [formData]);
+
+
   //Method for imput validation and post data to server to insert product using API call
-  const addProductHandle = () => {
+  const addProductHandle = async () => {
     setIsloading(true);
 
     //[check validation] -- Start
@@ -172,30 +114,37 @@ const AddProductScreen = ({ navigation, route }) => {
       setIsloading(false);
     } else {
       //[check validation] -- End
-      fetch(network.serverip + "/product", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          if (result.success == true) {
-            setIsloading(false);
-            setAlertType("success");
-            setError(result.message);
-          }
-        })
-        .catch((error) => {
-          setIsloading(false);
-          setError(error.message);
-          setAlertType("error");
-          console.log("error", error);
-        });
+      formData.append('name', title);
+      formData.append('price', price);
+      formData.append('description', description);
+      formData.append('uploaded', authUser.id);
+      formData.append('ordered', 'puk9skypjhpfw45');
+      formData.append('category', category);
+      formData.append('quantity', quantity);
+      const record = await pb.collection('products').create(formData);
+      console.log(record)
+      setIsloading(false);
+      setError("")
+      setImage('')
+      setTitle("")
+      setQuantity("")
+      setPrice("")
+
     }
   };
 
+ 
   //call the fetch functions initial render
-  // useEffect(() => {
-  //   fetchCategories();
-  //   console.log(categories);
-  // }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      const array = categories.map((p) => ({ label: p.name, value: p.id }));
+      setItems(array);
+    }
+  }, [categories]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -244,17 +193,17 @@ const AddProductScreen = ({ navigation, route }) => {
             )}
           </View>
 
-          <CustomInput
+          {/* <CustomInput
             value={sku}
             setValue={setSku}
             placeholder={"SKU"}
             placeholderTextColor={colors.muted}
             radius={5}
-          />
+          /> */}
           <CustomInput
             value={title}
             setValue={setTitle}
-            placeholder={"Title"}
+            placeholder={"name"}
             placeholderTextColor={colors.muted}
             radius={5}
           />
