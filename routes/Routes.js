@@ -3,6 +3,7 @@ import LoginScreen from "../Screens/auth/LoginScreen";
 import SignupScreen from "../Screens/auth/SignupScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Splash from "../Screens/auth/splash";
+import ForgetPasswordScreen from "../Screens/auth/ForgetPasswordScreen";
 // import ForgetPasswordScreen from "../screens/auth/ForgetPasswordScreen";
 // import UpdatePasswordScreen from "../screens/profile/UpdatePasswordScreen";
 import MyAccountScreen from "../Screens/profile/MyAccountScreen";
@@ -38,7 +39,7 @@ const Routes = () => {
         <Stack.Screen name="splash" component={Splash} />
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="signup" component={SignupScreen} />
-        {/* <Stack.Screen name="forgetpassword" component={ForgetPasswordScreen} /> */}
+        <Stack.Screen name="forgetpassword" component={ForgetPasswordScreen} />
         {/* <Stack.Screen name="updatepassword" component={UpdatePasswordScreen} /> */}
         <Stack.Screen name="myaccount" component={MyAccountScreen} />
         <Stack.Screen name="mywishlist" component={MyWishlistScreen} />

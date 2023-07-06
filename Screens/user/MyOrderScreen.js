@@ -1,237 +1,257 @@
 import {
-    StyleSheet,
-    Text,
-    StatusBar,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    RefreshControl,
-  } from "react-native";
-  import React, { useState, useEffect } from "react";
-  import { colors, network } from "../../constants";
-  import Ionicons from 'react-native-vector-icons/Feather';
-  import CustomAlert from "../../components/CustomAlert/CustomAlert";
-  import ProgressDialog from "react-native-progress-dialog";
-  import OrderList from "../../components/OrderList/OrderList";
-//   import AsyncStorage from "@react-native-async-storage/async-storage";
-  
-  const MyOrderScreen = ({ navigation, route }) => {
-    const { user } = route.params;
-    const [isloading, setIsloading] = useState(false);
-    const [label, setLabel] = useState("Please wait...");
-    const [refeshing, setRefreshing] = useState(false);
-    const [alertType, setAlertType] = useState("error");
-    const [error, setError] = useState("");
-    // const [orders, setOrders] = useState([]);
-    const [UserInfo, setUserInfo] = useState({});
-  
-    // //method to remove the authUser from aysnc storage and navigate to login
-    const logout = async () => {
-      await AsyncStorage.removeItem("authUser");
-      navigation.replace("login");
-    };
-  
-    // //method to convert the authUser to json object
-    const convertToJSON = (obj) => {
-      try {
-        setUserInfo(JSON.parse(obj));
-      } catch (e) {
-        setUserInfo(obj);
-      }
-    };
-  
-    // //method to convert the authUser to json object and return token
-    const getToken = (obj) => {
-      try {
-        setUserInfo(JSON.parse(obj));
-      } catch (e) {
-        setUserInfo(obj);
-        return user.token;
-      }
-      return UserInfo.token;
-    };
-  
-    // //method call on pull refresh
-    const handleOnRefresh = () => {
-      setRefreshing(true);
-      fetchOrders();
-      setRefreshing(false);
-    };
-  
-    // //method to navigate to order detail screen of a specific order
-    // const handleOrderDetail = (item) => {
-    //   navigation.navigate("myorderdetail", {
-    //     orderDetail: item,
-    //     Token: UserInfo.token,
-    //   });
-    // };
-  
-    // //fetch order from server using API call
-    // const fetchOrders = () => {
-    //   var myHeaders = new Headers();
-    //   let token = getToken(user);
-    //   myHeaders.append("x-auth-token", token);
-  
-    //   var requestOptions = {
-    //     method: "GET",
-    //     headers: myHeaders,
-    //     redirect: "follow",
-    //   };
-    //   setIsloading(true);
-    //   fetch(`${network.serverip}/orders`, requestOptions)
-    //     .then((response) => response.json())
-    //     .then((result) => {
-    //       if (result?.err === "jwt expired") {
-    //         logout();
-    //       }
-    //       if (result.success) {
-    //         setOrders(result.data);
-    //         setError("");
-    //       }
-    //       setIsloading(false);
-    //     })
-    //     .catch((error) => {
-    //       setIsloading(false);
-    //       setError(error.message);
-    //       console.log("error", error);
-    //     });
-    // };
-  
-    // //convert authUser to Json object and fetch orders on initial render
-    // useEffect(() => {
-    //   convertToJSON(user);
-    //   fetchOrders();
-    // }, []);
-  const orders = ["s","sd","dff"];
-    return (
-      <View style={styles.container}>
-        <StatusBar></StatusBar>
-        <ProgressDialog visible={isloading} label={label} />
-        <View style={styles.topBarContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <Ionicons
-              name="arrow-left"
-              size={30}
-              color={colors.muted}
-            />
-          </TouchableOpacity>
-          <View></View>
-          <TouchableOpacity onPress={() => handleOnRefresh()}>
-            <Ionicons name="shopping-cart" size={30} color={colors.primary} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.screenNameContainer}>
-          <View>
-            <Text style={styles.screenNameText}>My Orders</Text>
-          </View>
-          <View>
-            <Text style={styles.screenNameParagraph}>
-              Your order and your order status
-            </Text>
-          </View>
-        </View>
-        <CustomAlert message={error} type={alertType} />
-        {orders.length == 0 ? (
-          <View style={styles.ListContiainerEmpty}>
-            <Text style={styles.secondaryTextSmItalic}>
-              "There are no orders placed yet."
-            </Text>
-          </View>
-        ) : (
-          <ScrollView
-            style={{ flex: 1, width: "100%", padding: 20 }}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refeshing}
-                // onRefresh={handleOnRefresh}
-              />
-            }
-          >
-            {orders.map((order, index) => {
-              return (
-                <OrderList
-                  item={order}
-                  key={index}
-                  onPress={() => handleOrderDetail(order)}
-                />
-              );
-            })}
-            <View style={styles.emptyView}></View>
-          </ScrollView>
-        )}
-      </View>
+  StyleSheet,
+  Text,
+  StatusBar,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  RefreshControl,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { colors, network } from "../../constants";
+import Ionicons from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/Feather';
+import ProductList from "../../components/ProductList/ProductList";
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import CustomInput from "../../components/CustomInput/";
+import ProgressDialog from "react-native-progress-dialog";
+import pb from "../../constants/Network";
+const MyOrderScreen = ({ navigation, route }) => {
+  const { authUser } = route.params;
+  const [isloading, setIsloading] = useState(false);
+  const [refeshing, setRefreshing] = useState(false);
+  const [alertType, setAlertType] = useState("error");
+
+  const [label, setLabel] = useState("Loading...");
+  const [error, setError] = useState("");
+  const [products, setProducts] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
+  const [cat,setCat] = useState("")
+
+  // query data from db
+   
+  const fetchProduct = async () => {
+    const filterExpression = `ordered.name='rose'`;
+    const records = await pb.collection('products').getFullList({
+      filter: filterExpression,
+      expand: 'category'
+    });
+    const orders = records.map((p) => p['expand']['category']).flat()
+    setProducts(records);
+    // console.log(records.map((p) => p['expand']['category']).flat())
+    setCat(orders)
+    console.log(cat)
+    setFoundItems(records);
+    setError("");
+    setIsloading(false);
+  }
+
+  //method call on pull refresh
+  const handleOnRefresh = () => {
+    setRefreshing(true);
+    fetchProduct();
+    setRefreshing(false);
+  };
+  //method to delete the specific order
+  // const handleDelete = (id) => {
+  //   setIsloading(true);
+  //   console.log(`${network.serverip}/delete-product?id=${id}`);
+  //   fetch(`${network.serverip}/delete-product?id=${id}`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       if (result.success) {
+  //         fetchProduct();
+  //         setError(result.message);
+  //         setAlertType("success");
+  //       } else {
+  //         setError(result.message);
+  //         setAlertType("error");
+  //       }
+  //       setIsloading(false);
+  //     })
+  //     .catch((error) => {
+  //       setIsloading(false);
+  //       setError(error.message);
+  //       console.log("error", error);
+  //     });
+  // };
+
+  //method for alert
+  const showConfirmDialog = (id) => {
+    return Alert.alert(
+      "Are your sure?",
+      "Are you sure you want to delete the order?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            handleDelete(id);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
     );
   };
-  
-  export default MyOrderScreen;
-  
-  const styles = StyleSheet.create({
-    container: {
-      width: "100%",
-      flexDirecion: "row",
-      backgroundColor: colors.light,
-      alignItems: "center",
-      justifyContent: "flex-start",
-      flex: 1,
-    },
-    topBarContainer: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: 20,
-    },
-    toBarText: {
-      fontSize: 15,
-      fontWeight: "600",
-    },
-    screenNameContainer: {
-      padding: 20,
-      paddingTop: 0,
-      paddingBottom: 0,
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "flex-start",
-      alignItems: "flex-start",
-    },
-    screenNameText: {
-      fontSize: 30,
-      fontWeight: "800",
-      color: colors.muted,
-    },
-    screenNameParagraph: {
-      marginTop: 5,
-      fontSize: 15,
-    },
-    bodyContainer: {
-      width: "100%",
-      flexDirecion: "row",
-      backgroundColor: colors.light,
-      alignItems: "center",
-      justifyContent: "flex-start",
-      flex: 1,
-    },
-    emptyView: {
-      height: 20,
-    },
-    ListContiainerEmpty: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flex: 1,
-    },
-    secondaryTextSmItalic: {
-      fontStyle: "italic",
-      fontSize: 15,
-      color: colors.muted,
-    },
-  });
-  
+
+  //method to filer the orders for by title [search bar]
+  // const filter = () => {
+  //   const keyword = filterItem;
+  //   if (keyword !== "") {
+  //     const results = products?.filter((product) => {
+  //       return product?.title.toLowerCase().includes(keyword.toLowerCase());
+  //     });
+  //     setFoundItems(results);
+  //   } else {
+  //     setFoundItems(products);
+  //   }
+  // };
+
+  //filter the data whenever filteritem value change
+  // useEffect(() => {
+  //   filter();
+  // }, [filterItem]);
+
+  // bado search feature
+  //fetch the categories on initial render
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+  return (
+    <View style={styles.container}>
+      <ProgressDialog visible={isloading} label={label} />
+      <StatusBar></StatusBar>
+      <View style={styles.TopBarContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons
+            name="arrow-left-circle"
+            size={30}
+            color={colors.muted}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("addproduct", { authUser: authUser });
+          }}
+        >
+          <AntDesign name="plus-square" size={30} color={colors.muted} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.screenNameContainer}>
+        <View>
+          <Text style={styles.screenNameText}>View Product</Text>
+        </View>
+        <View>
+          <Text style={styles.screenNameParagraph}>View all products</Text>
+        </View>
+      </View>
+      <CustomAlert message={error} type={alertType} />
+      <CustomInput
+        radius={5}
+        placeholder={"Search..."}
+        value={filterItem}
+        setValue={setFilterItem}
+      />
+      <ScrollView
+        style={{ flex: 1, width: "100%" }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
+        }
+      >
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No product found with the name of ${filterItem}!`}</Text>
+        ) : (
+          foundItems.map((product,index) => {
+            return (
+              // description for quantity
+              <ProductList
+                key={index}
+                image={`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`}
+                title={product.name}
+                // category={`${cat[index].name}`}
+                price={`${product.price}Tsh`}
+                qantity={product.location}
+                onPressView={() => {
+                  console.log("view is working " + product._id);
+                }}
+                // onPressEdit={() => {
+                //   navigation.navigate("editproduct", {
+                //     product: product,
+                //     authUser: authUser,
+                //   });
+                // }}
+                onPressDelete={() => {
+                  showConfirmDialog(product._id);
+                }}
+              />
+            );
+          })
+        )}
+      </ScrollView>
+    </View>
+  );
+};
+//MyOrderScreen
+export default MyOrderScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirecion: "row",
+    backgroundColor: colors.light,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    flex: 1,
+  },
+  TopBarContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  formContainer: {
+    flex: 2,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    display: "flex",
+    width: "100%",
+    flexDirecion: "row",
+    padding: 5,
+  },
+
+  buttomContainer: {
+    width: "100%",
+  },
+  bottomContainer: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  screenNameContainer: {
+    marginTop: 10,
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  screenNameText: {
+    fontSize: 30,
+    fontWeight: "800",
+    color: colors.muted,
+  },
+  screenNameParagraph: {
+    marginTop: 5,
+    fontSize: 15,
+  },
+});

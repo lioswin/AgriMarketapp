@@ -83,7 +83,7 @@ const ViewProductScreen = ({ navigation, route }) => {
   const showConfirmDialog = (id) => {
     return Alert.alert(
       "Are your sure?",
-      "Are you sure you want to delete the category?",
+      "Are you sure you want to delete the product?",
       [
         {
           text: "Yes",
@@ -177,18 +177,18 @@ const ViewProductScreen = ({ navigation, route }) => {
                 key={index}
                 image={`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`}
                 title={product.name}
-                category={`${cat[index].name}`}
+                // category={`${cat[index].name}`}
                 price={`${product.price}Tsh`}
-                qantity={'4'}
+                qantity={product.location}
                 onPressView={() => {
                   console.log("view is working " + product._id);
                 }}
-                onPressEdit={() => {
-                  navigation.navigate("editproduct", {
-                    product: product,
-                    authUser: authUser,
-                  });
-                }}
+                // onPressEdit={() => {
+                //   navigation.navigate("editproduct", {
+                //     product: product,
+                //     authUser: authUser,
+                //   });
+                // }}
                 onPressDelete={() => {
                   showConfirmDialog(product._id);
                 }}
@@ -200,7 +200,7 @@ const ViewProductScreen = ({ navigation, route }) => {
     </View>
   );
 };
-
+//MyOrderScreen
 export default ViewProductScreen;
 
 const styles = StyleSheet.create({

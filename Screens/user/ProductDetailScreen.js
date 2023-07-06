@@ -29,7 +29,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   // const handleAddToCat = (item) => {
   //   addCartItem(item);
   // };
-
+  
   // remove the authUser from async storage and navigate to login
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
@@ -84,19 +84,28 @@ const ProductDetailScreen = ({ navigation, route }) => {
   // };
 
   //method to increase the product quantity
-  // const handleIncreaseButton = (quantity) => {
-  //   if (avaiableQuantity > quantity) {
-  //     setQuantity(quantity + 1);
-  //   }
-  // };
+  const handleIncreaseButton = (quantity) => {
+    if (avaiableQuantity > quantity) {
+      setQuantity(quantity + 1);
+    }
+  };
 
   //method to decrease the product quantity
-  // const handleDecreaseButton = (quantity) => {
-  //   if (quantity > 0) {
-  //     setQuantity(quantity - 1);
-  //   }
-  // };
+  const handleDecreaseButton = (quantity) => {
+    if (quantity > 0) {
+      setQuantity(quantity - 1);
+    }
+  };
 
+  AddProductS = async ()=>{
+    const data = {
+      "ordered": [
+        'puk9skypjhpfw45' 
+      ]
+  };
+    const record = await pb.collection('products').update(product.id, data);
+    console.log(record)
+  }
   //method to add or remove item from wishlist
   // const handleWishlistBtn = async () => {
   //   setIsDisbale(true);
@@ -181,7 +190,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   //set quantity, avaiableQuantity, product image and fetch wishlist on initial render
   useEffect(() => {
-    setQuantity(0);
+    setQuantity(1);
     setAvaiableQuantity(product.quantity);
     SetProductImage(`${pb.baseUrl}/api/files/products/${product.id}/${product.image}`);
     // fetchWishlist();
@@ -190,7 +199,6 @@ const ProductDetailScreen = ({ navigation, route }) => {
   //render whenever the value of wishlistItems change
   // useEffect(() => {}, [wishlistItems]);
   const cartproduct = [2, 4, 5];
-  // const avaiableQuantity =[3,4];
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -263,7 +271,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
           </View>
           <View style={styles.productInfoBottomContainer}>
             <View style={styles.counterContainer}>
-              {/* <View style={styles.counter}>
+              <View style={styles.counter}>
                 <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
@@ -272,7 +280,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 >
                   <Text style={styles.counterButtonText}>-</Text>
                 </TouchableOpacity>
-                <Text style={styles.counterCountText}>2323</Text>
+                <Text style={styles.counterCountText}>{quantity}</Text>
                 <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
@@ -281,18 +289,19 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 >
                   <Text style={styles.counterButtonText}>+</Text>
                 </TouchableOpacity>
-              </View> */}
+              </View>
             </View>
             <View style={styles.productButtonContainer}>
               {avaiableQuantity > 0 ? (
                 <CustomButton
-                  text={"Contact Seller"}
-                  onPress={() => {
-                    handleAddToCat(product);
-                  }}
+                  text={"ADD ODER"}
+                  onPress={AddProductS}
                 />
               ) : (
-                <CustomButton text={"Out of Stock"} disabled={true} />
+                <CustomButton
+                  text={"ADD ODER"}
+                  onPress={AddProductS}
+                />
               )}
             </View>
           </View>

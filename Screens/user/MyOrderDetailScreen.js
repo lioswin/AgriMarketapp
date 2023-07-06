@@ -13,6 +13,7 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import StepIndicator from "react-native-step-indicator";
+import pb from "../../constants/Network";
 
 const MyOrderDetailScreen = ({ navigation, route }) => {
   // const { orderDetail } = route.params;
@@ -50,33 +51,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     currentStepLabelColor: "#fe7013",
   };
 
-  //method to convert time to AM PM format
-  function tConvert(time) {
-    time = time
-      .toString()
-      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-    if (time.length > 1) {
-      time = time.slice(1); // Remove full string match value
-      time[5] = +time[0] < 12 ? "AM" : "PM"; // Set AM/PM
-      time[0] = +time[0] % 12 || 12; // Adjust hours
-    }
-    return time.join("");
-  }
-
-  //method to convert data to dd-mm-yyyy  format
-  const dateFormat = (datex) => {
-    let t = new Date(datex);
-    const date = ("0" + t.getDate()).slice(-2);
-    const month = ("0" + (t.getMonth() + 1)).slice(-2);
-    const year = t.getFullYear();
-    const hours = ("0" + t.getHours()).slice(-2);
-    const minutes = ("0" + t.getMinutes()).slice(-2);
-    const seconds = ("0" + t.getSeconds()).slice(-2);
-    const time = tConvert(`${hours}:${minutes}:${seconds}`);
-    const newDate = `${date}-${month}-${year}, ${time}`;
-
-    return newDate;
-  };
+ 
 
   // set total cost, order detail, order status on initial render
   // useEffect(() => {

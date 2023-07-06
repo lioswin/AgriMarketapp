@@ -28,12 +28,12 @@ const CategoryList = ({
         </View>
       </View>
       <View style={styles.categoryActionContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: colors.primary }]}
           onPress={onPressEdit}
         >
           <MaterialIcons name={"edit"} size={15} color={colors.white} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: colors.danger }]}
           onPress={onPressDelete}

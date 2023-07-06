@@ -2,39 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors } from "../../constants";
 
-// function getTime(date) {
-//   let t = new Date(date);
-//   const hours = ("0" + t.getHours()).slice(-2);
-//   const minutes = ("0" + t.getMinutes()).slice(-2);
-//   const seconds = ("0" + t.getSeconds()).slice(-2);
-//   let time = `${hours}:${minutes}:${seconds}`;
-//   // Check correct time format and split into components
-//   time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [
-//     time,
-//   ];
 
-//   if (time.length > 1) {
-//     // If time format correct
-//     time = time.slice(1); // Remove full string match value
-//     time[5] = +time[0] < 12 ? " AM" : " PM"; // Set AM/PM
-//     time[0] = +time[0] % 12 || 12; // Adjust hours
-//   }
-//   return time.join(""); // return adjusted time or original string
-// }
-
-// const dateFormat = (datex) => {
-//   let t = new Date(datex);
-//   const date = ("0" + t.getDate()).slice(-2);
-//   const month = ("0" + (t.getMonth() + 1)).slice(-2);
-//   const year = t.getFullYear();
-//   const hours = ("0" + t.getHours()).slice(-2);
-//   const minutes = ("0" + t.getMinutes()).slice(-2);
-//   const seconds = ("0" + t.getSeconds()).slice(-2);
-//   const newDate = `${date}-${month}-${year}`;
-
-//   return newDate;
-// };
-// let item = {'3'};
 const OrderList = ({ onPress }) => {
   const [totalCost, setTotalCost] = useState(0);
   const [quantity, setQuantity] = useState(0);

@@ -34,18 +34,18 @@ const ProductList = ({
             <Text>{price}</Text>
           </View>
           <View style={styles.productInfoItem}>
-            <Text style={styles.productInfoItemText}>SKU: </Text>
+            <Text style={styles.productInfoItemText}>Location: </Text>
             <Text>{qantity <= 0 ? "Out of Stock" : qantity}</Text>
           </View>
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: colors.primary }]}
           onPress={onPressEdit}
         >
           <MaterialIcons name={"edit"} size={15} color={colors.white} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: colors.danger }]}
           onPress={onPressDelete}

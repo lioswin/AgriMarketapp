@@ -107,34 +107,6 @@ const ViewCategoryScreen = ({ navigation, route }) => {
   };
 
   //method the fetch the catgeories from server using API call
-  // const fetchCategories = () => {
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("x-auth-token", getToken(authUser));
-
-  //   var requestOptions = {
-  //     method: "GET",
-  //     headers: myHeaders,
-  //     redirect: "follow",
-  //   };
-  //   setIsloading(true);
-  //   fetch(`${network.serverip}/categories`, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.success) {
-  //         setCategories(result.categories);
-  //         setFoundItems(result.categories);
-  //         setError("");
-  //       } else {
-  //         setError(result.message);
-  //       }
-  //       setIsloading(false);
-  //     })
-  //     .catch((error) => {
-  //       setIsloading(false);
-  //       setError(error.message);
-  //       console.log("error", error);
-  //     });
-  // };
   const fetchCategories = async () => {
     const filterExpression = `uploaded.name='${authUser.name}'`;
     const records = await pb.collection('products').getFullList({
@@ -229,9 +201,9 @@ const ViewCategoryScreen = ({ navigation, route }) => {
               key={item.id}
               title={item.name}
               description={item.description}
-              onPressEdit={() => {
-                handleEdit(item);
-              }}
+              // onPressEdit={() => {
+              //   handleEdit(item);
+              // }}
               onPressDelete={() => {
                 showConfirmDialog(item?._id);
               }}

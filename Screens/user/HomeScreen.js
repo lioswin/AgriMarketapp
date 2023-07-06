@@ -284,7 +284,7 @@ const HomeScreen = ({ navigation, route }) => {
                                             price={item.price}
                                             quantity={item.quantity}
                                             onPress={() => handleProductPress(item)}
-                                            onPressSecondary={() => handleAddToCat(item)}
+                                            // onPressSecondary={() => handleAddToCat(item)}
                                         />
                                     </View>
                                 )}
