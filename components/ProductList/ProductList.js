@@ -2,6 +2,7 @@ import { StyleSheet, Image, View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import MaterialIcons  from 'react-native-vector-icons/Feather';
 import { colors } from "../../constants";
+import { LogBox } from 'react-native';
 
 const ProductList = ({
   category,
@@ -13,6 +14,7 @@ const ProductList = ({
   onPressEdit,
   onPressDelete,
 }) => {
+  LogBox.ignoreAllLogs(true);
   return (
     <TouchableOpacity style={styles.container} onPress={onPressView}>
       <View style={styles.innerContainer}>

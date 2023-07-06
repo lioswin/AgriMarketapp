@@ -1,9 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors } from "../../constants";
+import { LogBox } from 'react-native';
 
 
 const OrderList = ({ onPress }) => {
+  LogBox.ignoreAllLogs(true);
   const [totalCost, setTotalCost] = useState(0);
   const [quantity, setQuantity] = useState(0);
   // useEffect(() => {

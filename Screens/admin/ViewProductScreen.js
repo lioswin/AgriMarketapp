@@ -17,7 +17,9 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 const ViewProductScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);

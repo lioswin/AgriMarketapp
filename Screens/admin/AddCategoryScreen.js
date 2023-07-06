@@ -19,8 +19,10 @@ import ProgressDialog from "react-native-progress-dialog";
 import AntDesign from 'react-native-vector-icons/Feather';
 import { useCallback } from 'react';
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 
 const AddCategoryScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { authUser } = route.params; //authUser data
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");

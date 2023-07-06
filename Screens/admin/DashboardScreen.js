@@ -18,8 +18,10 @@ import InternetConnectionAlert from "react-native-internet-connection-alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProgressDialog from "react-native-progress-dialog";
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 
 const DashboardScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { authUser } = route.params;
   const [user, setUser] = useState(authUser);
   const [label, setLabel] = useState("Loading...");

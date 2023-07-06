@@ -14,8 +14,9 @@ import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import StepIndicator from "react-native-step-indicator";
 import pb from "../../constants/Network";
-
+import { LogBox } from 'react-native';
 const MyOrderDetailScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   // const { orderDetail } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");

@@ -17,7 +17,9 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 const MyOrderScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);
@@ -136,20 +138,20 @@ const MyOrderScreen = ({ navigation, route }) => {
             color={colors.muted}
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate("addproduct", { authUser: authUser });
           }}
         >
           <AntDesign name="plus-square" size={30} color={colors.muted} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>View Product</Text>
+          <Text style={styles.screenNameText}>Products ordered</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>View all products</Text>
+          <Text style={styles.screenNameParagraph}>View Orders made</Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
@@ -167,7 +169,7 @@ const MyOrderScreen = ({ navigation, route }) => {
         }
       >
         {foundItems && foundItems.length == 0 ? (
-          <Text>{`No product found with the name of ${filterItem}!`}</Text>
+          <Text>{`No orderd product found with the name of ${filterItem}!`}</Text>
         ) : (
           foundItems.map((product,index) => {
             return (

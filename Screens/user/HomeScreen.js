@@ -20,6 +20,7 @@ import { SliderBox } from "react-native-image-slider-box";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 
 const category = [
     {
@@ -109,6 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
     // };
 
     const fetchProduct = async ()=>{
+        LogBox.ignoreAllLogs(true);
         const products = await pb.collection('products').getFullList({
             sort: '-created',
         });
@@ -209,8 +211,8 @@ const HomeScreen = ({ navigation, route }) => {
                     </View>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.scanButton}>
-                            <Text style={styles.scanButtonText}>Scan</Text>
-                            <Image source={scanIcon} style={{ width: 20, height: 20 }} />
+                            <Text style={styles.scanButtonText}></Text>
+                            <Image source={null} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
                     </View>
                 </View>

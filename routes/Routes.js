@@ -26,10 +26,11 @@ import ViewUsersScreen from "../Screens/admin/ViewUsersScreen";
 import CategoriesScreen from "../Screens/user/CategoriesScreen";
 // import EditCategoryScreen from "../Screens/admin/EditCategoryScreen";
 import MyWishlistScreen from "../Screens/profile/MyWishlistScreen";
-
+import { LogBox } from 'react-native';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
+  LogBox.ignoreAllLogs(true);
   return (
     <NavigationContainer>
       <Stack.Navigator

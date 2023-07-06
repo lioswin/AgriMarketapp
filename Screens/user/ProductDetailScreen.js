@@ -17,8 +17,10 @@ import CustomButton from "../../components/CustomButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import pb from "../../constants/Network";
+import { LogBox } from 'react-native';
 
 const ProductDetailScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { product } = route.params;
   // const cartproduct = useSelector((state) => state.product);
   // const dispatch = useDispatch();
@@ -105,6 +107,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   };
     const record = await pb.collection('products').update(product.id, data);
     console.log(record)
+    navigation.goBack()
   }
   //method to add or remove item from wishlist
   // const handleWishlistBtn = async () => {
@@ -272,7 +275,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
           <View style={styles.productInfoBottomContainer}>
             <View style={styles.counterContainer}>
               <View style={styles.counter}>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
                     handleDecreaseButton(quantity);
@@ -280,15 +283,15 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 >
                   <Text style={styles.counterButtonText}>-</Text>
                 </TouchableOpacity>
-                <Text style={styles.counterCountText}>{quantity}</Text>
-                <TouchableOpacity
+                <Text style={styles.counterCountText}>{quantity}</Text> */}
+                {/* <TouchableOpacity
                   style={styles.counterButtonContainer}
                   onPress={() => {
                     handleIncreaseButton(quantity);
                   }}
                 >
                   <Text style={styles.counterButtonText}>+</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
             <View style={styles.productButtonContainer}>

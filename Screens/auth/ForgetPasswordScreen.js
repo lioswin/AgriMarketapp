@@ -4,15 +4,14 @@ import Ionicons from 'react-native-vector-icons/Feather';
 import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-
+import pb from "../../constants/Network";
 
 const ForgetPasswordScreen = ({ navigation }) => {
 
   const [mail, setmail] = useState("")
-  const sendInstructionsHandle = () => {
+  const sendInstructionsHandle = async () => {
     //TODO: handle user verfication and mail password reset link
-    console.log(mail)
-    setmail("")
+  await pb.collection('users').requestPasswordReset(mail);
   };
   return (
     <View style={styles.container}>

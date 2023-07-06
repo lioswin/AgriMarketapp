@@ -117,6 +117,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
     console.log(records.map((p) => p['expand']['category']).flat())
     setCategories(orders);
     setFoundItems(orders);
+    console.log(foundItems);
     setError("");
     setIsloading(false);
    // console.log(categories)
@@ -175,7 +176,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
           <Text style={styles.screenNameText}>View Categories</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>View all Categories</Text>
+          <Text style={styles.screenNameParagraph}>View Categories of products ordered</Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />

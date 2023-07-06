@@ -11,10 +11,12 @@ import userIcon from "../../assets/icons/bar_profile_icon.png";
 import userIconActive from "../../assets/icons/bar_profile_icon_active.png";
 import MyOrderScreen from "../../Screens/user/MyOrderScreen";
 import CategoriesScreen from "../../Screens/user/CategoriesScreen";
+import { LogBox } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { user } = route.params;
   return (
     <Tab.Navigator

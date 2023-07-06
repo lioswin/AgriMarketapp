@@ -21,8 +21,10 @@ import { useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import pb from "../../constants/Network";
 import { useCallback } from 'react';
+import { LogBox } from 'react-native';
 
 const AddProductScreen = ({ navigation, route }) => {
+  LogBox.ignoreAllLogs(true);
   const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
